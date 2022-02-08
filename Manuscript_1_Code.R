@@ -1,4 +1,4 @@
-#**************************
+ #**************************
 # PhD First Manuscript Code 
 #**************************
 #
@@ -34,8 +34,8 @@ library("scales")
 library("ggforce")
 library("ggalluvial")
 library("lintr")
-library("cairo")
-library("extrafonts")
+library("Cairo")
+library("extrafont")
 
 #******************************************************************
 # Figure 3b (Data + Code) -----------------------------------------
@@ -251,26 +251,28 @@ All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
 
 # Plot Figures
 
-# (a) Berger and Parker Dissolution Index (B_and_P_Index) vs Michael-Thibault-Clara Index (MTC_Index)
+# (a) Berger and Parker Dissolution Index (B_and_P_Index) vs Foraminiferal Variance Index
 
-MTC_Index_vs_B_and_P_Index <- ggplot(All_core_data, 
+FV_Index_vs_B_and_P_Index <- ggplot(All_core_data, 
                                      aes(x=mtc_index, y=bandp_index)) +
                               geom_point(aes(shape = Region, color = Depth), size = 6) +
                               scale_color_gradient(low = "blue", high = "green") + theme_ipsum() +
                               scale_shape_manual(values = c(15,16,17,18)) + 
-                              theme(axis.title.y = element_text(size = 13), axis.title.x = element_text(size = 13)) +
-                              theme(legend.title = element_text(face = c(rep("bold", 5)), size = 14)) + 
+                              theme(axis.title.y = element_text(size = 15), axis.title.x = element_text(size = 15)) +
+                              theme(legend.title = element_text(face = c(rep("bold", 5)), size = 14)) +
+                              theme(legend.text = element_text(size = 13)) +
+                              theme(axis.text=element_text(size = 13, colour = "black")) + 
                               ylab("Berger & Parker Index") + 
-                              xlab("MTC Index")
+                              xlab("FV-Index")
 
 # Reverse legend color bar scale
 
-MTC_Index_vs_B_and_P_Exp <- MTC_Index_vs_B_and_P_Index + guides(color = guide_colourbar(reverse = T))
+FV_Index_vs_B_and_P_Exp <- FV_Index_vs_B_and_P_Index + guides(color = guide_colourbar(reverse = T))
 
 
-# (b) MTC-Index vs Fragmentation Rate
+# (b) FV-Index vs Fragmentation Rate
 
-MTC_Index_vs_Fragmentation_Rate <- ggplot(All_core_data,
+FV_Index_vs_Fragmentation_Rate <- ggplot(All_core_data,
                                           aes(mtc_index,fragmentation_rate)) + 
                                    geom_point(aes(shape = Region, color = Region), size = 4) +
                                    geom_smooth(method=lm,se=T, size = .5, color = 'black') +
@@ -282,7 +284,7 @@ MTC_Index_vs_Fragmentation_Rate <- ggplot(All_core_data,
                                    annotate("text", label = "R = –0.017, p = 0.89", x = 0.5, y = 45, size = 4.5, colour ="black") + 
                                    theme(legend.title = element_text(face = c(rep("bold", 5)), size = 14)) + 
                                    theme(legend.text = element_text(size = 12)) + 
-                                   labs(y =  expression("Fragmentation Rate (%)"), x = expression("MTC-Index"))
+                                   labs(y =  expression("Fragmentation Rate (%)"), x = expression("FV-Index"))
 
 # (c) Size vs Depth
 
@@ -298,7 +300,7 @@ Size_vs_Depth <- ggplot(All_core_data,
                  annotate("text", label = "R = 0.38, p = 0.0024", x =1500, y = 850, size = 4.5, colour ="black") +
                  theme(legend.title = element_text(face = c(rep("bold", 5)), size = 14)) + 
                  theme(legend.text = element_text(size = 12)) + 
-                 labs(y = expression("Size (μm)"), x = expression("Depth (m)"))
+                 labs(y = expression("Size 95/5 (μm)"), x = expression("Depth (m)"))
 
 # (d) Size vs Carbonate at core depth
 
@@ -314,12 +316,16 @@ Size_vs_Carbonate_at_Core_Depth <- ggplot(All_core_data,
                                    annotate("text", label = "R = 0.33, p = 0.0087", x =69, y = 850, size = 4.5, colour ="black") + 
                                    theme(legend.title = element_text(face = c(rep("bold", 5)), size = 14)) + 
                                    theme(legend.text = element_text(size = 12)) + 
-                                   labs(y =  expression(Size (μm)), x = expression(Carbonate[Core~depth] ~ (µmol/kg)))
+                                   labs(y = expression("Size 95/5 (μm)") , x = expression(Carbonate[Core~depth] ~ (µmol/kg)))
 
 # Export all 4 Figures as a single PNG file
 
-png("~/Desktop/Dissolution Indices Latest_10102021.png",width=10073,height=5351,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(MTC_Index_vs_B_and_P_Exp,MTC_Index_vs_Fragmentation_Rate,Size_vs_Depth,Size_vs_Carbonate_at_Core_Depth, nrow= 2, ncol = 2, labels = c("(a)", "(b)", "(c)", "(d)"))
+png("~/Desktop/Dissolution Indices Latest_30112021.png",width=10073,height=7000,units="px",res=600,bg="white", pointsize = 8)
+ggarrange(FV_Index_vs_B_and_P_Exp,FV_Index_vs_Fragmentation_Rate,Size_vs_Depth,Size_vs_Carbonate_at_Core_Depth, nrow= 2, ncol = 2, labels = c("(a)", "(b)", "(c)", "(d)"))
+dev.off()
+
+png("~/Desktop/Dissolution Indices Latest_10102021pres.png",width=10073,height=4000,  units="px",nrow = 2, ncol = 1,res=600,bg="white")
+ggarrange(MTC_Index_vs_B_and_P_Exp,Size_vs_Depth, labels = c("(a)", "(b)"))
 dev.off()
 
 #******************************************************************
@@ -406,13 +412,13 @@ stacked_area_plot_ordered_13_species_data$Coreids <- factor(stacked_area_plot_or
 # Plot Figure
 
 stacked_area_plot_ordered_13_species_plot <- ggplot(stacked_area_plot_ordered_13_species_data, 
-                                                    aes(x= logsize, fill=Species)) +
-                                             geom_area(aes(y = stat(width*density*40)),  stat = "bin", alpha=0.9) +
+                                                    aes(x= size, fill=Species)) +
+                                             geom_area(aes(y = stat(width*density*25)),  stat = "bin", alpha=0.9) +
                                              facet_wrap(~Coreids, nrow = 8, ncol = 8) + 
-                                             scale_x_continuous (limits=c(2.2,3.1)) + 
-                                             geom_vline(aes(xintercept = logsiz), col="black", linetype = "longdash") + 
-                                             geom_vline(aes(xintercept = logmodsize), col="red", linetype = "longdash") + 
-                                             scale_fill_viridis(discrete = T) +
+                                             scale_x_continuous (limits=c(150,1300), breaks = seq(150, 1300, by = 250)) + 
+                                             geom_vline(aes(xintercept = size95), col="black", linetype = "longdash") +
+                                             geom_vline(aes(xintercept = Norm_Mode), col="red", linetype = "dashed") +
+                                             scale_fill_viridis(discrete = T) + 
                                              theme(legend.position = 'right') + 
                                              theme_ipsum() + 
                                              theme_bw() + 
@@ -421,7 +427,7 @@ stacked_area_plot_ordered_13_species_plot <- ggplot(stacked_area_plot_ordered_13
                                              theme(legend.text = element_text(face = c(rep("italic", 5)))) + 
                                              theme(legend.title = element_text(face = c(rep("bold", 5)), size = 14)) + 
                                              theme(legend.text = element_text(size = 12)) + 
-                                             xlab("Log Size (μm)") +
+                                             xlab("Size (μm)") +
                                              ylab("Density")
 
 # Export Figure as EPS
@@ -433,7 +439,7 @@ dev.off()
 
 # Export Figure as PNG
 
-png("~/Desktop/stacked_area_plot_ordered_exp.png",width=8692,height=7181,units="px",res=600,bg="white", pointsize = 8)
+png("~/Desktop/stacked_area_plot_ordered_exp.png",width=8892,height=7181,units="px",res=600,bg="white", pointsize = 8)
 stacked_area_plot_ordered_13_species_plot
 dev.off()
 
@@ -464,13 +470,13 @@ Perc_greater_than_reg_size95 <- ggplot(Proxy_for_large_vs_small_size_data,
 
 #Load Data:: Species specific response to environmental parameters
 
-species_specific_response_data <- read.csv("species_specific_response.csv", header = TRUE, sep = ',')
+species_specific_response <- read.csv("species_specific_response_data.csv", header = TRUE, sep = ',')
 
 # Plot Figure
 
 species_specific_response_plot <- ggplot(species_specific_response_data,
-                                    aes(y = r_coefficient, axis1 = Parameter_most_correlated, axis2 = Species)) +
-                             geom_alluvium(aes(fill = Parameter_most_correlated), width = 1/12) +
+                                    aes(y = r_coefficient, axis1 = param_most_corr, axis2 = Species)) +
+                             geom_alluvium(aes(fill = param_most_corr), width = 1/12) +
                              geom_stratum(width = 1/12, fill = "black", color = "grey") +
                              geom_label(stat = "stratum", aes(label = after_stat(stratum))) +
                              scale_x_discrete(limits = c("Parameter", "Species"), expand = c(.05, .05)) +
@@ -481,6 +487,8 @@ species_specific_response_plot <- ggplot(species_specific_response_data,
                              theme(axis.text=element_text(size = 12, colour = "black")) +
                              theme(axis.title=element_text(size=13, colour = "black", face = "bold")) + 
                              labs(y = expression("Correlation co-efficient (R)"))
+
+species_specific_response_plot <- species_specific_response_plot + guides(fill = guide_legend(title = "Parameters"))
 
 # Export Figure as EPS
 
@@ -510,21 +518,22 @@ All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
 
 # Create Base Plot
 
-F1size_vs_Carbonate_at_core_depth_base_plot <- ggplot(All_core_data, 
-                                                  aes(x=carbonate_at_core_depth, y=F1size)) + 
+F1size_vs_surf_carb_base_plot <- ggplot(All_core_data, 
+                                           aes(x=surf_carb, y=F1size)) + 
                                            geom_point(shape = 2, size = 3, colour = "blue") + 
-                                           stat_smooth(method = "lm", col = "#C42126",se = FALSE, size = 1, fullrange = T)  +  
-                                           stat_cor(method = "pearson", size = 5) + 
+                                           stat_smooth(method = "lm", formula = y~poly(x,2),col = "#C42126",se = FALSE, size = 1, fullrange = T) + 
+                                           annotate("text", label = "R = – 0.50, p = 0.0002", x = 250, y = 1.35, size = 5, colour ="black") + 
                                            theme_bw() + 
                                            theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
+
 # Add Titles and Customize Labels
 
-F1size_vs_Carbonate_at_core_depth <- F1size_vs_Carbonate_at_core_depth_base_plot + 
-                                     labs(x = expression(Carbonate~conc.[Core~depth] ~ (µm/kg)), 
-                                     y = expression("F1 Axis Scores")) +
-                                     theme(axis.text=element_text(size = 14, colour = "black"), 
-                                     axis.title=element_text(size=16, colour = "black", face = "bold"))
+F1size_vs_surf_carb <- F1size_vs_surf_carb_base_plot + 
+                       labs(x = expression(Carbonate~conc.[surface] ~ (µm/kg)), 
+                       y = expression("F1 Axis Scores")) +
+                       theme(axis.text=element_text(size = 14, colour = "black"), 
+                       axis.title=element_text(size=16, colour = "black", face = "bold"))
 
 # (b) Size F2 Scores vs 2nd Order Polynomial Fit with SST
 
@@ -534,7 +543,8 @@ F2size_vs_SST_baseplot <- ggplot(All_core_data,
                                  aes(x=sst, y=F2size)) + 
                           geom_point(shape = 7, size = 3, colour = "purple") + 
                           stat_smooth(method = "lm", formula = y~poly(x,2),col = "#C42126",se = FALSE, size = 1, fullrange = T) + 
-                          theme_bw()+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
+                          theme_bw() + 
+                          theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) 
 
 # Add Titles and Customize Labels
 
@@ -575,7 +585,7 @@ F2assemblagevssst <- ggplot(All_core_data,
 #Export Figures all 4 figures as PNG
 
 png("~/Desktop/Factorial Analysis for size and Assemblage Data.png",width=8800,height=8300,units="px",res=800,bg="white", pointsize = 8)
-ggarrange(F1size_vs_Carbonateatcoredepth, F2size_vs_SST, F1assemblagevspp,F2assemblagevssst, labels = c("(a)", "(b)","(c)","(d)"), ncol = 2, nrow = 2)
+ggarrange(F1size_vs_surf_carb, F2size_vs_SST, F1assemblagevspp,F2assemblagevssst, labels = c("(a)", "(b)","(c)","(d)"), ncol = 2, nrow = 2)
 dev.off()
 
 
