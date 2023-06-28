@@ -35,7 +35,7 @@ library("LaplacesDemon")
 library("robustbase")
 
 ##****************************************
-## Test for Data normality ----------
+## Test for Data Normality ----------
 ##****************************************
 
 jarque.bera.test(All_species_unimod_test$size) #Test whether size data follows a normal distribution using the Jarque-Bera test method
@@ -404,30 +404,42 @@ jpeg("~/Desktop/Figure 6c.jpg",width = 6000, height = 3500,units = "px",res = 60
 Size_vs_frag_rate # save the figure object in jpeg format
 dev.off()
 
-#******************************************************************
-#Figure 8 (Density plot) -----------------------------------------
-#******************************************************************
+##***********************************
+## Figure 7 (Density plot) ----------
+##***********************************
 
-#Load Data:: Density Plot of Species Size
+## Load Data:: Density Plot of Species Size
 
 size_density <- read.csv("size_density_plot.csv", header = TRUE, sep = ',')
 
-#Plot Figure
+## Plot Figure
 
-Densityplot <- ggplot(size_density, 
-                      aes(x = size, y = species, fill = species)) + 
-  geom_density_ridges(alpha=0.25) + 
-  scale_x_continuous(name = "Size (μm)", limits = c(0, 1300), expand = c(0,0)) + 
-  scale_y_discrete(name = "Species", expand = c(0, 0)) + 
-  theme_bw() +
-  theme(axis.text = element_text(size=8), axis.text.y = element_text(size = 8)) + 
-  theme(legend.position = "none") +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  theme(axis.title.x = element_text(size = 10, face = "bold"), axis.title.y = element_text(size = 10, face = "bold"))
+Densityplot <- ggplot(size_density, # specify data object
+                      aes(x = size, y = species, fill = species)) + # specify columns for x and y axes, and give each species its own color
+  geom_density_ridges(alpha = 0.25) + # set transparency level of colors
+  scale_x_continuous(name = "Size (μm)", # set x-axis title
+                     limits = c(0, 1300), # set limits for the range of values on x-axis
+                     expand = c(0,0)) + # make distribution plot start from O
+  scale_y_discrete(name = "Species", # set y-axis title
+                   expand = c(0, 0)) + # make labeling start from O mark
+  theme_bw() + # set background to white
+  theme(axis.text = element_text(size = 8), # set axis text size 
+        axis.text.y = element_text(size = 8)) + # set axis text size on y-axis
+  theme(legend.position = "none") + # show no legend
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.title.x = element_text(size = 10, face = "bold"), # set x-axis title text size and format
+        axis.title.y = element_text(size = 10, face = "bold")) # set y-axis title text size and format
 
-# Italicize species names
+## Italicize species names
 
-Densityplot_italicized <- Densityplot + theme(axis.text.y = element_text(face = c(rep("italic", 4))))
+Densityplot_italicized <- Densityplot + theme(axis.text.y = element_text(face = c(rep("italic", 4)))) # italicize species names on y-axis
+
+## Export Figure as JPG
+
+jpeg("~/Desktop/Figure 7.jpg",width = 1750, height = 2700, units = "px",res = 500, bg = "white",pointsize = 8)
+Densityplot_italicized # save the figure object in jpeg format
+dev.off()
 
 
 # Test of unimodality, bimodality, and multimodality
@@ -514,11 +526,7 @@ cairo_ps(filename='Density Plot.eps', width=18.75,height=29.2,family = "Arial",
 Densityplot_italicized
 dev.off()
 
-#Export Figure as JPG
 
-jpeg("~/Desktop/Density Plot22122022.jpg",width=1750,height=2700,units="px",res=500, bg="white",pointsize = 8)
-Densityplot_italicized
-dev.off()
 
 #*****************************************************************
 #Figure 9 (Optimum size hypothesis + size vs SR and SD) ---------
