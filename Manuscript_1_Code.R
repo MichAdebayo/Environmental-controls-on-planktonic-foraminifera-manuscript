@@ -1,24 +1,22 @@
-#**************************
-#PhD First Manuscript Code 
-#**************************
-#
-#Code related to the paper: 
-#
-#************************************************************************************************************************
-#Manuscript Title: Environmental Controls on Size Distribution of Planktonic Foraminifera in the tropical Indian Ocean
-#************************************************************************************************************************
-#
-#Author: Michael Adebayo
-#
-#Date: 14th April, 2021 
-#*****************************
+##**********************************************************************************************************************************##
+## Written by Michael B. Adebayo, PhD Student in de Garidel-Thoron lab, (2019 – 2023)                                               ##
+## Centre européen de recherche et d'enseignement de géosciences de l'environnement (CEREGE), Aix-en-Provence                       ##
+## Aix-Marseille University, France                                                                                                 ##
+## Thesis Chapter 5 codes                                                                                                           ##
+## Code related to the published manuscript in the journal: Geochemistry, Geophysics, Geosystems (G3)                               ##                                                                                            ##
+##**********************************************************************************************************************************##
 
-#***********************************************************************
-#Packages -------------------------------------------------------------
-#***********************************************************************
+##**********************************************************************************************************************************##
+## Manuscript Title: Environmental Controls of Size Distribution of Modern Planktonic Foraminifera in the tropical Indian Ocean     ##
+##**********************************************************************************************************************************##
+
+##**************************
+## Load Packages -----------
+##**************************
 
 library("ggplot2")
 library("ggpubr")
+library("ggridges")
 library("MASS")
 library("vegan")
 library("dplyr")
@@ -28,94 +26,92 @@ library("viridis")
 library("forcats")
 library("plotly")
 library("ggrepel")
-library("ggridges")
 library("grid")
 library("scales")
-library("ggforce")
 library("ggalluvial")
-library("lintr")
-library("Cairo")
 library("extrafont")
-library("Rfit")
 library("tseries")
 library("LaplacesDemon")
 library("robustbase")
-library("openxlsx")
-library("dichromat")
-library("RColorBrewer")
-library("colorBlindness")
 
-#******************************************************************
-# Jarque-Bera Test for Data Normality Test -----------------------
-#******************************************************************
+##****************************************
+## Test data for Data normality ----------
+##****************************************
 
-jarque.bera.test(All_species_unimod_test$size) #Test size data for normality
+jarque.bera.test(All_species_unimod_test$size) #Test whether size data follows a normal distribution using the Jarque-Bera test method
 
-#******************************************************************
-# Kruskal-Wallis Test for Normality -----------------------
-#******************************************************************
-#*
-kruskal.test(size ~ species, data = All_species_unimod_test)
+#****************************************
+# Figure 3b (Human vs Machine) ----------
+#****************************************
 
-#******************************************************************
-#Figure 3b (Human vs Machine) -----------------------------------------
-#******************************************************************
-
-#Load Data:: Human vs Machine (Total Individual and Mean Species Count)
+# Load Data:: Human vs Machine Count (Total Individual and Mean Species Count)
 
 Human_vs_Machine_1 <- read.csv("Human_vs_machine_total_individual_species_count.csv", header = TRUE, sep = ',')
 Human_vs_Machine_2 <- read.csv("Human_vs_machine_total_mean_species_count.csv", header = TRUE, sep = ',')
 
 #Plot Figure
 
-Human_vs_Machine <- ggplot(NULL, aes(Total_Machine_Count, Total_Human_Count)) + 
-  geom_point(data = Human_vs_Machine_1, aes(color = Species, shape = Species)) + 
-  geom_abline(intercept = 0, slope = 1, color = 'black', size = .4) + 
-  scale_color_viridis_d(aesthetics = "colour") + 
-  scale_color_manual(aesthetics = "color", values = c("#dd77a3", "#67c675", "#c76dcf","#a7bc45",
-  "#6a70d7", "#6aa13f","#523687","#ce9534",
-"#6d8bd6","#cd6d3b", "#33d4d1","#c9417e",
-"#47bb8a", "#a54190", "#4a6e24","#ca86ce",
-"#af9e4d", "#802657","#984627","#dd5858",
-"#b44555","#8B4789")) +
-  scale_shape_manual(values = c(4,5,6,7,8,9,10,11,12,13,
+Human_vs_Machine <- ggplot(NULL, 
+                           aes(Total_Machine_Count, Total_Human_Count)) + # specify data for x and y axes (individual species count)
+  geom_point(data = Human_vs_Machine_1, size = 4, # plot the machine count vs the human expert count
+             aes(color = Species, shape = Species)) + # add color and shape by species
+  geom_abline(intercept = 0, slope = 1, color = 'black', size = .4) + # add 1:1 line and specify the color and size of the line (i.e., the line that cuts across the figure)
+  scale_color_viridis_d(aesthetics = "colour") + # add color scale (this was not used because it was override manually)
+  scale_color_manual(aesthetics = "color", # specify the color representing each species manually
+                     values = c("#dd77a3", "#67c675", "#c76dcf","#a7bc45", 
+                                "#6a70d7", "#6aa13f","#523687","#ce9534",
+                                "#6d8bd6","#cd6d3b", "#33d4d1","#c9417e",
+                                "#47bb8a", "#a54190", "#4a6e24","#ca86ce",
+                                "#af9e4d", "#802657","#984627","#dd5858",
+                                "#b44555","#8B4789")) +
+  scale_shape_manual(values = c(4,5,6,7,8,9,10,11,12,13, # specify the shape representing each species manually
                                 14,15,16,17,18,19,20,21,22,23,24,25)) + 
-  scale_y_log10() + scale_x_log10() + 
-  geom_point(data = Human_vs_Machine_2, 
-             aes(x=Mean_Machine_Count, y = Mean_Human_Count,alpha = 0.9,size = Mean,  color = 'purple')) +
-  scale_size_continuous(range = c(3,21), name = 'Mean Count (Upper Limit)') +
-  theme_bw() + 
-  theme(legend.position= "right") + 
-  theme(axis.line  = element_line(colour = "black",size=0), panel.border = element_rect(colour = "black", fill=NA, size=1),
-        panel.grid.minor = element_blank(), panel.grid.major = element_blank()) +
-  geom_text_repel(data = Human_vs_Machine_2, aes(Mean_Machine_Count, 
-                                                 Mean_Human_Count, label = Species),
-                  segment.color = 'black', fontface = 'italic', size = 5.8, force = 4,
-                  point.padding = 0.9, min.segment.length = 1.5, box.padding = 1.4) + 
-  guides(alpha = "none", color = "none", shape = guide_legend(override.aes = list(size = 7))) + 
-  guides(size = guide_legend(override.aes = list(color = 'orchid4'))) + 
-  theme(legend.text = element_text(face = "italic", size = 24)) + 
-  theme(legend.title = element_text(size = 25)) 
+  scale_y_log10() + scale_x_log10() + # convert values to logarithmic scale
+  geom_point(data = Human_vs_Machine_2, # add a second plot for the human vs machine mean count per species (note that this is the second loaded data)
+             aes(x = Mean_Machine_Count, y = Mean_Human_Count, # specify data for second x and y axes (mean count per species)
+                 alpha = 0.9, size = Mean)) + # specify transparency level and size for each bubble (here size is scaled to the mean values for each species)
+  scale_size_continuous(range = c(4,28),  # restrict bubble size of species' mean count between 4 and 28
+                        name = 'Mean Count (Upper Limit)') + # add title to the legend for the mean size bubbles
+  theme_bw() + # make background white
+  theme(legend.position = "right") + # place legend to the right of the figure
+  theme(axis.line  = element_line(colour = "black",size = 0), # set x and y axis line colors to black
+        panel.border = element_rect(colour = "black", fill=NA, size = 1), # format panel border color to black and make size of the border 1
+        panel.grid.minor = element_blank(), # remove minor grid lines in figure
+        panel.grid.major = element_blank()) + # remove major grid lines in figure
+  geom_text_repel(data = Human_vs_Machine_2,  # load the second data to specify labels for each species' bubble
+                  aes(Mean_Machine_Count, Mean_Human_Count, label = Species), # specify x and y axes and column to be used as labels
+                  segment.color = 'black', # specify color for the segment lines
+                  fontface = 'italic', # format labels to italics
+                  size = 7, # specify label text size
+                  force = 9, # customize force of repulsion between overlapping text labels
+                  point.padding = 0.9, # customize the amount of padding around labeled points
+                  min.segment.length = 2.3, # omit short line segments with < 2.3 minimum length
+                  box.padding = 1.4) + # customize the amount of padding around bounding box
+  guides(alpha = "none", color = "none", shape = guide_legend(override.aes = list(size = 7))) + # override the initial size of the shapes shown in the legend section and specify new size for the shapes
+  theme(legend.text = element_text(face = "italic", size = 24)) + # customize legend text size and format in 'italics'
+  theme(legend.title = element_text(size = 25)) # customize legend title text size 
 
-#Add and Customize Axis Titles
+# Add and Customize Axis Titles
 
-Human_vs_Machine_exp  <- Human_vs_Machine + theme(axis.text=element_text(size = 24, colour = "black"),
-                                                  axis.title=element_text(size=25, colour = "black")) + 
-  annotate("text", x =90, y = 2700, size = 7, label = "Total number of forams compared") + 
-  annotate("text", x =70, y = 2300, size = 7, 
-           label = "italic(n)==127097", parse = TRUE) +
-  annotate("text", x = 60, y = 1800, size = 7, 
-            label = "italic(ρ)==0.97*','~italic(p)", parse = TRUE) +
-  annotate("text", x = 158, y = 1800, size = 7, 
-           label = "< 2.2e-16") +
-  annotate("text", x = 1650, y = 2200, size = 7, 
-           label = "italic(y)*'='~italic(x)", parse = TRUE) +
-  labs(y = "Number Counted by Human Recognition", x = "Number Counted by CNN Recognition")
+Human_vs_Machine_exp  <- Human_vs_Machine + # recall saved plot above (remember the plot above was saved as the object: Human_vs_Machine)
+  theme(axis.text=element_text(size = 24, colour = "black"), # change the size and color of the axis texts 
+  axis.title=element_text(size = 25, colour = "black")) + # change the size and color of the title texts 
+  annotate("text", x = 90, y = 2700, size = 7, # specify position and size for text to be annotated
+           label = "Total number of forams compared") + # add the text to be annotated
+  annotate("text", x = 70, y = 2300, size = 7, # specify position and size for the second text to be annotated
+           label = "italic(n)==127097", parse = TRUE) + # add the second text to be annotated
+  annotate("text", x = 60, y = 1800, size = 7, # specify position and size for the third text to be annotated
+            label = "italic(ρ)==0.97*','~italic(p)", parse = TRUE) + # add the third text to be annotated
+  annotate("text", x = 145, y = 1800, size = 7, # specify position and size for the fourth text to be annotated
+           label = "< 2.2e-16") + # add the fourth text to be annotated
+  annotate("text", x = 1650, y = 2200, size = 7, # specify position and size for the fifth text to be annotated
+           label = "italic(y)*'='~italic(x)", parse = TRUE) + # add the fifth text to be annotated
+  labs(y = "Number Counted by Human Recognition", x = "Number Counted by CNN Recognition")  # add titles for x and y axis
 
 #Export Figure as JPG
 
-jpeg("~/Desktop/Human_vs_machine_total_individual_and_mean_species_count26082022.jpg",width=9500,height=6000,units="px",res=600,bg="white", pointsize = 8)
-Human_vs_Machine_exp
+jpeg("~/Desktop/Figure3b.jpg",width=10500,height=6800,units="px",res=600,bg="white", pointsize = 8)
+Human_vs_Machine_exp # save the new figure object in jpeg format
 dev.off()
 
 
@@ -169,7 +165,7 @@ Relative_Abundance_Comparisons_Exp <- Relative_Abundance_Comparisons +
 
 #Export Figure as JPG
 
-jpeg("~/Desktop/ForCens vs This study plot06092022.jpg",width=6700,height=6000,units="px",res=500,bg="white", pointsize = 8)
+jpeg("~/Desktop/ForCens vs This study plot25092022.jpg",width=6700,height=6000,units="px",res=500,bg="white", pointsize = 8)
 Relative_Abundance_Comparisons_Exp
 dev.off()
 
@@ -196,8 +192,8 @@ this_study_size_vs_rillo_plot <- ggplot(this_study_size_vs_rillo,
   scale_color_manual(aesthetics = "colour", values = c("#DC050C","#67c675", "#a7bc45", "#6a70d7", "#6aa13f",
                                                        "#ce9534","#6d8bd6","#cd6d3b", "#33d4d1","#c9417e",
                                                        "#47bb8a", "#a54190", "#4a6e24","#ca86ce", "#af9e4d", 
-                                                       "#802657", "#72190E","#dd5858", "#b44555", "#42150A" )) + 
-  scale_shape_manual(values = c(1,5,7,8,9,11,12,13,14,15,16,17,18,19,20,21,25,23,24,3)) + 
+                                                       "#802657", "#72190E","#dd5858","#42150A", "#b44555")) + 
+  scale_shape_manual(values = c(1,5,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,3,24)) + 
   geom_errorbar(aes(ymin=ymin, ymax=ymax)) +
   theme_bw() + 
   theme(legend.position= "right") + 
@@ -233,7 +229,7 @@ this_study_size_vs_rillo_plots_final_exp <- this_study_size_vs_rillo_plots_final
 
 #Export Figure as JPG
 
-jpeg("~/Desktop/CNN vs Rillo with error bars06092022.jpg",width=6700,height=6000,units="px",res=600,bg="white")
+jpeg("~/Desktop/CNN vs Rillo with error bars25092022.jpg",width=6700,height=6000,units="px",res=600,bg="white")
 this_study_size_vs_rillo_plots_final_exp
 dev.off()
 
@@ -249,7 +245,7 @@ All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
 #(a) Assemblage F1 Scores vs Primary Productivity
 
 F1assemblagevspp <- ggplot(All_core_site_data, aes(logpp,F1assemblage)) + 
-  geom_point(colour = "#b067a3", size = 3) + 
+  geom_point(size = 3) + 
   geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, show.legend = F, colour = "black") + 
   theme_bw() + 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
@@ -262,7 +258,7 @@ F1assemblagevspp <- ggplot(All_core_site_data, aes(logpp,F1assemblage)) +
 #(b) Assemblage F2 Scores vs SST
 
 F2assemblagevssst <- ggplot(All_core_site_data,aes(sst,F2assemblage)) + 
-  geom_point(colour = "#9c954d", size = 3) +
+  geom_point(size = 3) +
   geom_smooth(method=lm,se=T, size = .5, show.legend = F, colour = "black") + 
   theme_bw()+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
   theme(axis.text=element_text(size = 12, colour = "black"), legend.position = "none",
@@ -272,8 +268,8 @@ F2assemblagevssst <- ggplot(All_core_site_data,aes(sst,F2assemblage)) +
 
 #Export Figure as PNG
 
-jpeg("~/Desktop/Factorial Analysis for size and Assemblage Data28082022.jpg",width=6000,height=2500,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(F1assemblagevspp,F2assemblagevssst, labels = c("(a)", "(b)"), ncol = 2, nrow = 1)
+jpeg("~/Desktop/Factorial Analysis for size and Assemblage Data26122022.jpg",width=6000,height=2500,units="px",res=600,bg="white", pointsize = 8)
+ggarrange(F1assemblagevspp,F2assemblagevssst, ncol = 2, nrow = 1)
 dev.off()
 
 #******************************************************************
@@ -316,7 +312,7 @@ Size_vs_Depth <- ggplot(All_core_site_data,aes(Depth,size)) +
            label = "italic(R)^{2}==0.10*','~italic(p)==0.03", parse = TRUE) +
   labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Depth (m)"))
 
-jpeg("~/Desktop/Dissolution_depth05092022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
+jpeg("~/Desktop/Dissolution_depth16122022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
 Size_vs_Depth 
 dev.off()
 
@@ -337,7 +333,7 @@ Size_vs_Delta_carbonate_at_core_depth <- ggplot(All_core_site_data,aes(cd_delta_
            label = "italic(R)^{2}==0.11*','~italic(p)==0.01", parse = TRUE) +
   labs(y = expression(Size[95]["/"][5]~(µm)), x = expression(Delta ~ Carbonate[Core~depth] ~ (µmol/kg)))
 
-jpeg("~/Desktop/Dissolution_deltacarb05092022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
+jpeg("~/Desktop/Dissolution_deltacarb16122022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
 Size_vs_Delta_carbonate_at_core_depth
 dev.off()
 
@@ -359,7 +355,7 @@ Size_vs_frag_rate <- ggplot(All_core_site_data,aes(fragmentation_rate,size)) +
   labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Fragmentation Rate (%)"))
 
 
-jpeg("~/Desktop/Dissolution_fragrate05092022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
+jpeg("~/Desktop/Dissolution_fragrate16122022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
 Size_vs_frag_rate
 dev.off()
 
@@ -383,7 +379,7 @@ dev.off()
 
 #Load Data:: Density Plot of Species Size
 
-size_density <- read.csv("Size_density_plot.csv", header = TRUE, sep = ',')
+size_density <- read.csv("size_density_plot.csv", header = TRUE, sep = ',')
 
 #Plot Figure
 
@@ -392,7 +388,7 @@ Densityplot <- ggplot(size_density,
   geom_density_ridges(alpha=0.25) + 
   scale_x_continuous(name = "Size (μm)", limits = c(0, 1300), expand = c(0,0)) + 
   scale_y_discrete(name = "Species", expand = c(0, 0)) + 
-  theme_bw()+
+  theme_bw() +
   theme(axis.text = element_text(size=8), axis.text.y = element_text(size = 8)) + 
   theme(legend.position = "none") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
@@ -489,7 +485,7 @@ dev.off()
 
 #Export Figure as JPG
 
-jpeg("~/Desktop/Density Plot06092022.jpg",width=1750,height=2700,units="px",res=500, bg="white",pointsize = 8)
+jpeg("~/Desktop/Density Plot22122022.jpg",width=1750,height=2700,units="px",res=500, bg="white",pointsize = 8)
 Densityplot_italicized
 dev.off()
 
@@ -522,7 +518,7 @@ robust.m <- ggplot(Opt_hyp_test, aes(x=Sp_rel_abund, y=Size)) +
   guides(size = "none") +
   labs(x = expression("Relative Abundance (%)"), y = expression("Size (µm)")) 
 
-jpeg("~/Desktop/Opt_size_04092022_2.jpg",width=15000,height=10500,units="px",res=700,bg="white", pointsize = 8)
+jpeg("~/Desktop/Opt_size_16122022_3.jpg",width=15000,height=10500,units="px",res=700,bg="white", pointsize = 8)
 robust.m
 dev.off()
 
@@ -538,16 +534,17 @@ bonfer_test$bonferroni_sig_2 <- p.adjust(bonfer_test$pvalue,
 
   Size_vs_species_richness <- ggplot(All_core_site_data,
                                      aes(species_richness,size)) + 
-    geom_point(aes(color = Depth), size = 4) +
+    geom_point(aes(color = Depth, shape = Region), size = 5) +
     geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, color = 'black')  + 
     scale_color_gradientn(colours = c("#d7191c","#fdae61","#abd9e9","#004488")) +
+    scale_shape_manual(values = c(15,16,17,18)) + 
     theme_bw() + 
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
     theme(axis.text=element_text(size = 20, colour = "black"), legend.position = "none",
           axis.title=element_text(size=22, colour = "black", face = "bold")) +
-    annotate("text", x = 18, y = 850, size = 5, colour ="black", label = "italic(R)^{2}==0.013*','~italic(p)==0.546", parse = TRUE) +
+    guides(shape = guide_legend(override.aes = list(size = 6))) +
+    annotate("text", x = 18, y = 850, size = 7, colour ="black", label = "italic(R)^{2}==0.013*','~italic(p)==0.546", parse = TRUE) +
     labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Species Richness"))
-  
   
   #450054","#FCE724","#DC267F","#FE6100"
   #FCE724","#7AD151", "#2A778F","#450054"
@@ -557,84 +554,26 @@ bonfer_test$bonferroni_sig_2 <- p.adjust(bonfer_test$pvalue,
 
   Size_vs_species_diversity <- ggplot(All_core_site_data, #Add data (Data, x-variable, y-variable)
                                      aes(species_diversity,size)) + 
-    geom_point(aes(color = Depth), size = 4) +    # color points by depth
+    geom_point(aes(color = Depth, shape = Region), size = 5) +    # color points by depth
     geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, color = 'black')  + 
     scale_color_gradientn(colours = c("#d7191c","#fdae61","#abd9e9","#004488"), name = "Depth (m)") +
+    scale_shape_manual(values = c(15,16,17,18)) + 
     theme_bw() + 
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
     theme(axis.text=element_text(size = 20, colour = "black"), 
           axis.title=element_text(size=22, colour = "black", face = "bold")) +
-    theme(legend.position = "right", legend.text = element_text(size = 20), 
+    theme(legend.position = "right", legend.text = element_text(size = 20),
           legend.title = element_text(size = 22)) +
-    annotate("text", x = 1.5, y = 820, size = 5, 
+    guides(shape = guide_legend(override.aes = list(size = 6))) +
+    annotate("text", x = 1.65, y = 820, size = 7, 
              colour ="black", label = "italic(R)^{2}==0.49*','~italic(p)==6.43e-09", parse = TRUE) +
     labs(y = NULL, x = expression("Species Diversity (Shannon–Weiner Index)"))
     
-  
 #Export all Figures as single JPEG file
-
-jpeg("~/Desktop/Size_vs_abundance_richness_and_diversity25042022_exp.jpg",width=9500,height=3700,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(ggarrange(Size_vs_species_richness,Size_vs_species_diversity, labels = c("(a)", "(b)")))
-dev.off() 
-
-
-#******************************************************************
-#Figure 10 (Influence of assemblage distribution on size) --------
-#******************************************************************
-
-#Load Data::Influence of assemblage distribution on size (data only shown for the 13 most abundant species in the Equatorial Indian Ocean)
-
-stacked_area_plot_ordered_13_species_data <- read.csv("stacked_area_plot_ordered_13_species.csv", header = TRUE, sep = ',') 
-
-#Re-order the data according to core location (i.e. Arabian Sea, Bay of Bengal, Central Indian Ocean, and Mozambique Channel)
-
-stacked_area_plot_ordered_13_species_data$Coreids <- factor(stacked_area_plot_ordered_13_species_data$Coreid, 
-                                                            levels = c( "MD96-2045", "MD96-2044", "MD79-276","MD79-261","MD79-260", "MD76-011", "MD90-0936", "MD90-0939", "MD90-0940", "MD90-0938",
-                                                                        "MD96-2049", "MD79-257", "MD96-2051", "MD96-2053", "MD96-2054", "MD96-2055", "MD96-2056", "MD96-2067a", "MD96-2067b", "MD96-2067b2",
-                                                                        "MD96-2058", "MD96-2059", "MD96-2066", "MD96-2065","MD96-2061", "MD96-2063", "MD96-2064","MD96-2060", "MD98-2165", "BARP9442",
-                                                                        "BARP9441",  "BARP9439",  "BARP9437", "MD12-3423",  "BARP9412", "BARP9411",  "MD77-160 ","BARP9409", "BARP9430", "BARP9422",
-                                                                        "BARP9426", "MD77-171 ", "MD77-185", "MD76-133",  "MD77-182 ", "MD90-0949",  "MD90-0955", "MD90-0963", "MD90-0959", "MD90-0958",
-                                                                        "MD90-0961", "MD90-0960", "MD90-0956", "MD90-0957", "MD76-132", "MD77-205", "MD77-204","MD77-202", "MD04-2873",
-                                                                        "MD04-2877", "MD04-2875B"))  
-#Set color pallette
-
-Paired <- colorRampPalette(brewer.pal('Paired',n=12), alpha = FALSE)
-
-#Plot Figure
-
-stacked_area_plot_ordered_13_species_plot <- ggplot(stacked_area_plot_ordered_13_species_data, 
-                                                    aes(x= size, fill=Species)) +
-  geom_area(aes(y = stat(width*density*25)),  stat = "bin") + 
-  scale_fill_manual(values = setNames(Paired(13), levels(stacked_area_plot_ordered_13_species_data$Species))) + 
-  facet_wrap(~Coreids, nrow = 8, ncol = 8) + 
-  scale_x_continuous (limits=c(150,1300), breaks = seq(150, 1300, by = 250)) + 
-  geom_vline(aes(xintercept = size95), col="black") +
-  geom_vline(aes(xintercept = Norm_Mode), col="black", linetype = "longdash") +
-  theme(legend.position = 'right') + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 12)) +
-  theme(axis.text.x = element_text(angle=90,hjust=1, size=15)) + 
-  theme(axis.text.y = element_text(size=15)) + 
-  theme(axis.title = element_text(size=18)) + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ 
-  theme(legend.text = element_text(face = c(rep("italic", 5)))) + 
-  theme(legend.title = element_text(face = c(rep("bold", 5)), size = 18)) + 
-  theme(legend.text = element_text(size = 15)) + 
-  xlab("Size (μm)") +
-  ylab("Density")
   
-#Export Figure as EPS
-
-cairo_ps(filename='stacked_area_plot_ordered_exp.eps', width=18, height=16, family = "Arial",
-         pointsize = 8, fallback_resolution = 500)
-stacked_area_plot_ordered_13_species_plot
-dev.off()
-
-#Export Figure as JPEG
-
-jpeg("~/Desktop/stacked_area_plot_ordered_exp_06092022.jpg",width=10000,height=7181,units="px",res=600,bg="white", pointsize = 8)
-stacked_area_plot_ordered_13_species_plot
-dev.off()
+jpeg("~/Desktop/Size_vs_abundance_richness_and_diversity22122022_expT.jpg",width=10000,height=3700,units="px",res=600,bg="white", pointsize = 8)
+ggarrange(ggarrange(Size_vs_species_diversity,Size_vs_species_richness))
+dev.off() 
 
 #******************************************************************
 #Figure 11 (Contribution of Large vs Small Size Species) ---------
@@ -664,12 +603,12 @@ Perc_greater_than_reg_size95 <- ggplot(Proxy_for_large_vs_small_size,
   
 #Export Figure as JPEG
 
-png("~/Desktop/Perc_greater_than_reg_size95_2.png",width=7800,height=4400,units="px",res=600,bg="white", pointsize = 8)
+png("~/Desktop/Perc_greater_than_reg_size95 16122022.png",width=7800,height=4400,units="px",res=600,bg="white", pointsize = 8)
 Perc_greater_than_reg_size95
 dev.off()
 
 #******************************************************************
-#Figure 12 (Data + Code) -----------------------------------------
+#Figure 12 (Species-specific Response) ---------------------------
 #******************************************************************
 
 #Load Data (a):: Species specific response to environmental parameters
@@ -700,7 +639,7 @@ species_specific_response_plot <- ggplot(species_specific_response_primary_copy_
 
 #Export Figure as JPEG
 
-jpeg("~/Desktop/species_specific_response_exp10092022.jpg",width = 9500,height=7500,units="px",res=700,bg="white", pointsize = 8)
+jpeg("~/Desktop/species_specific_response_exp27092022.jpg",width = 9500,height=7500,units="px",res=700,bg="white", pointsize = 8)
 species_specific_response_plot
 dev.off()
 
@@ -712,8 +651,8 @@ dev.off()
 
 All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
 
-F1size_vs_surf_carb <- ggplot(All_core_site_data, aes(x=surf_carb, y=F1size)) + 
-  geom_point(aes(colour = Region, shape = Region, size = 10)) +
+F1size_vs_surf_carb <- ggplot(All_core_site_data, aes(x= surf_carb, y=F1size)) + 
+  geom_point(aes(colour = Region, shape = Region), size = 9) +
   stat_smooth(method = "rlm", formula = y~x,col = "#000000",se = FALSE, size = 0.7, fullrange = T) +
   scale_shape_manual(values = c(15,16,17,18)) + 
   scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5"), 
@@ -724,7 +663,7 @@ F1size_vs_surf_carb <- ggplot(All_core_site_data, aes(x=surf_carb, y=F1size)) +
   theme(axis.text=element_text(size = 22, colour = "black"), 
         axis.title=element_text(size=24, colour = "black", face = "bold")) +
   theme(legend.text = element_text(size = 24), legend.title = element_text(size = 24)) +
-  annotate("text", x = 255, y = 1.3, size = 6, colour ="black", 
+  annotate("text", x = 255, y = 1.3, size = 7, colour ="black", 
            label = "italic(R)^{2}==0.41*','~italic(p)==1.18e-07", parse = TRUE) +
   labs(x = expression(Carbonate~conc.[surface] ~ (µm/kg)), y = expression("F1 Axis Scores"))
 
@@ -732,7 +671,7 @@ F1size_vs_surf_carb <- ggplot(All_core_site_data, aes(x=surf_carb, y=F1size)) +
 #(b) Size F2 Scores vs 2nd Order Polynomial Fit with SST
 
 F2size_vs_SST <- ggplot(All_core_site_data, aes(x=sst, y=F2size)) + 
-  geom_point(aes(colour = Region, shape = Region, size = 10)) + 
+  geom_point(aes(colour = Region, shape = Region), size = 9) + 
   stat_smooth(method = "lm", formula = y~poly(x,2),col = "#000000",se = FALSE, size = 0.7, fullrange = T) +
   scale_shape_manual(values = c(15,16,17,18)) + 
   scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5"),
@@ -743,13 +682,13 @@ F2size_vs_SST <- ggplot(All_core_site_data, aes(x=sst, y=F2size)) +
         axis.title=element_text(size=24, colour = "black", face = "bold")) +
   theme(legend.text = element_text(size = 22), legend.title = element_text(size = 24)) + 
   guides(size = "none") +
-  annotate("text", x = 23, y = 1.6, size = 6, colour = "black", 
+  annotate("text", x = 23, y = 1.6, size = 7, colour = "black", 
            label = "italic(R)^{2}==0.46*','~italic(p)==1.248e-08", parse = TRUE) +
 labs(x = expression("SST ("*degree*"C)"), y = expression("F2 Axis Scores")) 
 
 #Export Figures figures as JPG
 
-jpeg("~/Desktop/Community Size Response06092022.jpg",width=15000,height=5000,units="px",res=600,bg="white", pointsize = 8)
+jpeg("~/Desktop/Community Size Response16122022.jpg",width=15000,height=5000,units="px",res=600,bg="white", pointsize = 8)
 ggarrange(ggarrange(F1size_vs_surf_carb,F2size_vs_SST, ncol = 2))
 dev.off() 
 
@@ -889,7 +828,7 @@ dev.off()
 
 #Export Figure as JPEG
 
-jpeg("~/Desktop/Rillo Analyzed Plot08092022.jpg",width=6000,height=5000,units="px",res=500,bg="white", pointsize = 8)
+jpeg("~/Desktop/Rillo Analyzed Plot18122022.jpg",width=6000,height=5000,units="px",res=500,bg="white", pointsize = 8)
 Rillo_Analyzed
 dev.off()
 
@@ -922,5 +861,103 @@ png("~/Desktop/inflata_vs_sst_plot05052022.png",width=2000,height=1800,units="px
 inflata_vs_sst_plot
 dev.off()
 
+#**************************************************************************************
+# Supplementary Information S5a (Influence of assemblage distribution on size) --------
+#**************************************************************************************
 
+#Load Data::Influence of assemblage distribution on size (data only shown for the 13 most abundant species in the Equatorial Indian Ocean)
+
+stacked_area_plot_ordered_13_species_data <- read.csv("stacked_area_plot_ordered_13_species.csv", header = TRUE, sep = ',') 
+
+#Re-order the data according to core location (i.e. Arabian Sea, Bay of Bengal, Central Indian Ocean, and Mozambique Channel)
+
+stacked_area_plot_ordered_13_species_data_one$Coreids <- factor(stacked_area_plot_ordered_13_species_data_one$Coreid, 
+                                                            levels = c( "MD96-2045", "MD96-2044", "MD79-276","MD79-261","MD79-260", "MD76-011", 
+                                                                        "MD90-0936","MD90-0938",  "MD90-0939", "MD90-0940", "MD96-2049", "MD79-257",
+                                                                        "MD96-2051", "MD96-2053", "MD96-2054", "MD96-2055", "MD96-2056", "MD96-2067a", 
+                                                                        "MD96-2067b", "MD96-2067b2","MD96-2058", "MD96-2059", "MD96-2066", "MD96-2065",
+                                                                        "MD96-2061", "MD96-2063", "MD96-2064","MD96-2060", "MD98-2165", "BARP9442"))  
+#Set color pallette
+
+Paired <- colorRampPalette(brewer.pal('Paired',n=12), alpha = FALSE)
+
+#Plot Figure
+
+stacked_area_plot_ordered_13_species_plot <- ggplot(stacked_area_plot_ordered_13_species_data_one, 
+                                                    aes(x= size, fill=Species)) +
+  geom_area(aes(y = stat(width*density*25)),  stat = "bin") + 
+  scale_fill_manual(values = setNames(Paired(13), levels(stacked_area_plot_ordered_13_species_data_one$Species))) + 
+  facet_wrap(~Coreids, nrow = 6, ncol = 5) + 
+  scale_x_continuous (limits=c(150,1300), breaks = seq(150, 1300, by = 250)) + 
+  geom_vline(aes(xintercept = size95), col="black") +
+  geom_vline(aes(xintercept = Norm_Mode), col="black", linetype = "longdash") +
+  theme(legend.position = 'right') + 
+  theme_bw() + 
+  theme(strip.text.x = element_text(size = 12)) +
+  theme(axis.text.x = element_text(angle=90,hjust=1, size=15)) + 
+  theme(axis.text.y = element_text(size=15)) + 
+  theme(axis.title = element_text(size=18)) + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ 
+  theme(legend.text = element_text(face = c(rep("italic", 5)))) + 
+  theme(legend.title = element_text(face = c(rep("bold", 5)), size = 18)) + 
+  theme(legend.text = element_text(size = 15)) + 
+  xlab("Size (μm)") +
+  ylab("Density")
+
+
+#Export Figure as JPEG
+
+jpeg("~/Desktop/stacked_area_plot_ordered_exp_04012023.jpg",width=8500,height=7181,units="px",res=600,bg="white", pointsize = 8)
+stacked_area_plot_ordered_13_species_plot
+dev.off()
+
+#**************************************************************************************
+# Supplementary Information S5b (Influence of assemblage distribution on size) --------
+#**************************************************************************************
+
+#Load Data::Influence of assemblage distribution on size (data only shown for the 13 most abundant species in the Equatorial Indian Ocean)
+
+stacked_area_plot_ordered_13_species_data <- read.csv("stacked_area_plot_ordered_13_species.csv", header = TRUE, sep = ',') 
+
+#Re-order the data according to core location (i.e. Arabian Sea, Bay of Bengal, Central Indian Ocean, and Mozambique Channel)
+
+stacked_area_plot_ordered_13_species_data_two$Coreids <- factor(stacked_area_plot_ordered_13_species_data_two$Coreid, 
+                                                            levels = c("BARP9441",  "BARP9439",  "BARP9437", "MD12-3423",  "BARP9412", "BARP9411",
+                                                                       "MD77-160 ","BARP9409", "BARP9430", "BARP9422", "BARP9426", "MD77-171 ",
+                                                                       "MD77-185", "MD76-133",  "MD77-182 ", "MD90-0949",  "MD90-0955", "MD90-0963", 
+                                                                       "MD90-0959", "MD90-0958","MD90-0961", "MD90-0960", "MD90-0956", "MD90-0957",
+                                                                       "MD76-132", "MD77-205", "MD77-204","MD77-202", "MD04-2873", "MD04-2877", "MD04-2875B")) 
+
+#Set color pallette
+
+Paired <- colorRampPalette(brewer.pal('Paired',n=12), alpha = FALSE)
+
+#Plot Figure
+
+stacked_area_plot_ordered_13_species_plot_two <- ggplot(stacked_area_plot_ordered_13_species_data_two, 
+                                                    aes(x= size, fill=Species)) +
+  geom_area(aes(y = stat(width*density*25)),  stat = "bin") + 
+  scale_fill_manual(values = setNames(Paired(13), levels(stacked_area_plot_ordered_13_species_data_two$Species))) + 
+  facet_wrap(~Coreids, nrow = 7, ncol = 5) + 
+  scale_x_continuous (limits=c(150,1300), breaks = seq(150, 1300, by = 250)) + 
+  geom_vline(aes(xintercept = size95), col="black") +
+  geom_vline(aes(xintercept = Norm_Mode), col="black", linetype = "longdash") +
+  theme(legend.position = 'right') + 
+  theme_bw() + 
+  theme(strip.text.x = element_text(size = 12)) +
+  theme(axis.text.x = element_text(angle=90,hjust=1, size=15)) + 
+  theme(axis.text.y = element_text(size=15)) + 
+  theme(axis.title = element_text(size=18)) + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ 
+  theme(legend.text = element_text(face = c(rep("italic", 5)))) + 
+  theme(legend.title = element_text(face = c(rep("bold", 5)), size = 18)) + 
+  theme(legend.text = element_text(size = 15)) + 
+  xlab("Size (μm)") +
+  ylab("Density")
+
+#Export Figure as JPEG
+
+jpeg("~/Desktop/stacked_area_plot_ordered_exp_two_04012023.jpg",width=8500,height=7181,units="px",res=600,bg="white", pointsize = 8)
+stacked_area_plot_ordered_13_species_plot_two
+dev.off()
 
