@@ -300,109 +300,108 @@ F2assemblage_vs_sst <- ggplot(All_core_site_data, # specify data object
 ## Export Figure as JPG
 
 jpeg("~/Desktop/Figure 5.jpg", width = 6000, height = 2500, units = "px",res = 600, bg = "white", pointsize = 8)
-ggarrange(F1assemblage_vs_pp,F2assemblage_vs_sst, # save the new figure object in jpeg format
+ggarrange(F1assemblage_vs_pp,F2assemblage_vs_sst, # save the figure object in jpeg format
           ncol = 2, nrow = 1) # set number of columns and row to arrange the figure
 dev.off()
 
-#******************************************************************
-#Figure 7 (Dissolution Index) -------------------------------------
-#******************************************************************
+##****************************************
+## Figure 6 (Dissolution Index) ----------
+##****************************************
 
-#Load Data:: Dissolution Index (Berger and Parker Index vs Depth, Size vs Depth, Size vs Carbonate at Core Depth, Size vs Fragmentation Rate)
+## Load Data:: Dissolution Index (Berger and Parker Index vs Depth, Size vs Depth, Size vs Carbonate at Core Depth, Size vs Fragmentation Rate)
 
 All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ';')
 
-#Plot Figures
+## Plot Figures
 
-scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + 
-  
-#Place axis title at the end of axis
+## (b) Size vs Depth
 
-B_and_P_Index_vs_Depth_axis_adj <- B_and_P_Index_vs_Depth + theme(axis.title.y = element_text(hjust = 1, size = 16), axis.title.x = element_text(size = 16))
+Size_vs_Depth <- ggplot(All_core_site_data, # specify data object
+                        aes(Depth,size)) + # specify columns for x and y axes
+  geom_point(aes(shape = Region, color = Region), # group points by region and set color and shape based on this grouping
+             size = 6) + # set point size
+  geom_smooth(method = "rlm", aes(colour="rlm"), # fit robust linear model
+              se = T, # show confidence interval
+              size = .5, # set size of regression line
+              color = 'black') + # set color of regression line
+  scale_shape_manual(values = c(15,16,17,18)) + # set shape for region manually
+  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + # set color for region manually
+  theme_bw() + # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text = element_text(size = 24, colour = "black"), # set axis text size and color
+        legend.position = "right", # show legend on the right
+        axis.title = element_text(size = 25, colour = "black")) + # set axis title size and color
+  theme(legend.title = element_text(size = 25)) + # set legend title size 
+  theme(legend.text = element_text(size = 24)) + # set legend text size
+  annotate("text", x = 3000, y = 850, size = 6, colour ="black", # specify position, size, and color of text to be annotated
+           label = "italic(R)^{2}==0.10*','~italic(p)==0.03", parse = TRUE) + # add the text to be annotated
+  labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Depth (m)")) # add x and y axis titles
 
-#Reverse legend color bar scale
+## Export Figure as JPG
 
-B_and_P_vs_Depth_Exp <- B_and_P_Index_vs_Depth_axis_adj + guides(color = guide_colourbar(reverse = T))
-
-#scale_shape_manual(values = c(15,16,17,18))
-
-
-#(b) Size vs Depth
-
-Size_vs_Depth <- ggplot(All_core_site_data,aes(Depth,size)) + 
-  geom_point(aes(shape = Region, color = Region), size = 6) +
-  geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, color = 'black')  + 
-  scale_shape_manual(values = c(15,16,17,18)) + 
-  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + 
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  theme(axis.text=element_text(size = 24, colour = "black"), legend.position = "right",
-        axis.title=element_text(size=25, colour = "black")) +
-  theme(legend.title = element_text(size = 25)) + 
-  theme(legend.text = element_text(size = 24)) + 
-  annotate("text", x = 3000, y = 850, size = 6, colour ="black", 
-           label = "italic(R)^{2}==0.10*','~italic(p)==0.03", parse = TRUE) +
-  labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Depth (m)"))
-
-jpeg("~/Desktop/Dissolution_depth16122022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
-Size_vs_Depth 
+jpeg("~/Desktop/Figure 6b",width = 6000, height = 3500,units = "px", res = 600,bg = "white", pointsize = 8)
+Size_vs_Depth # save the figure object in jpeg format
 dev.off()
 
-#(c) Size vs Carbonate at core depth
+## (c) Size vs Carbonate at core depth
 
-Size_vs_Delta_carbonate_at_core_depth <- ggplot(All_core_site_data,aes(cd_delta_calc,size)) + 
-  geom_point(aes(shape = Region, color = Region), size = 6) +
-  geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, color = 'black')  + 
-  scale_shape_manual(values = c(15,16,17,18)) + 
-  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + 
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  theme(axis.text=element_text(size = 24, colour = "black"), legend.position = "right",
-        axis.title=element_text(size=25, colour = "black")) +
-  theme(legend.title = element_text(size = 25)) + 
-  theme(legend.text = element_text(size = 24)) + 
-  annotate("text", x = 15, y = 850, size = 6, colour ="black", 
-           label = "italic(R)^{2}==0.11*','~italic(p)==0.01", parse = TRUE) +
-  labs(y = expression(Size[95]["/"][5]~(µm)), x = expression(Delta ~ Carbonate[Core~depth] ~ (µmol/kg)))
+Size_vs_Delta_carbonate_at_core_depth <- ggplot(All_core_site_data, # specify data object
+                                                aes(cd_delta_calc,size)) + # specify columns for x and y axes
+  geom_point(aes(shape = Region, color = Region), # group points by region and set color and shape based on this grouping
+             size = 6) + # set point size
+  geom_smooth(method="rlm", aes(colour="rlm"), # fit robust linear model
+              se = T, # show confidence interval
+              size = .5, # set size of regression line
+              color = 'black')  + # set color of regression line
+  scale_shape_manual(values = c(15,16,17,18)) + # set shape for region manually
+  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + # set color for region manually
+  theme_bw() + # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text = element_text(size = 24, colour = "black"), # set axis text size and color
+        legend.position = "right", # show legend on the right
+        axis.title = element_text(size = 25, colour = "black")) + # set axis title size and color
+  theme(legend.title = element_text(size = 25)) + # set legend title size
+  theme(legend.text = element_text(size = 24)) + # set legend text size
+  annotate("text", x = 15, y = 850, size = 6, colour ="black", # specify position, size, and color of text to be annotated
+           label = "italic(R)^{2}==0.11*','~italic(p)==0.01", parse = TRUE) + # add the text to be annotated
+  labs(y = expression(Size[95]["/"][5]~(µm)), x = expression(Delta ~ Carbonate[Core~depth] ~ (µmol/kg))) # add x and y axis titles
 
-jpeg("~/Desktop/Dissolution_deltacarb16122022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
-Size_vs_Delta_carbonate_at_core_depth
+## Export Figure as JPG
+
+jpeg("~/Desktop/Figure 6c",width = 6000, height = 3500, units = "px", res = 600, bg = "white", pointsize = 8)
+Size_vs_Delta_carbonate_at_core_depth # save the figure object in jpeg format
 dev.off()
 
-#(d) Size vs Fragmentation Rate
+## (d) Size vs Fragmentation Rate
 
-Size_vs_frag_rate <- ggplot(All_core_site_data,aes(fragmentation_rate,size)) + 
-  geom_point(aes(shape = Region, color = Region), size = 6) +
-  geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, color = 'black')  + 
-  scale_shape_manual(values = c(15,16,17,18)) + 
-  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + 
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  theme(axis.text=element_text(size = 24, colour = "black"), legend.position = "right",
-        axis.title=element_text(size=25, colour = "black")) +
-  theme(legend.title = element_text(size = 25)) + 
-  theme(legend.text = element_text(size = 24)) + 
-  annotate("text", x = 30, y = 850, size = 6, colour ="black", 
-           label = "italic(R)^{2}==3.495e-07*','~italic(p)==0.99", parse = TRUE) +
-  labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Fragmentation Rate (%)"))
+Size_vs_frag_rate <- ggplot(All_core_site_data, # specify data object
+                            aes(fragmentation_rate,size)) + # specify columns for x and y axes
+  geom_point(aes(shape = Region, color = Region), # group points by region and set color and shape based on this grouping
+             size = 6) + # set point size
+  geom_smooth(method="rlm", aes(colour="rlm"), # fit robust linear model
+              se = T, # show confidence interval
+              size = .5, # set size of regression line
+              color = 'black')  + # set color of regression line
+  scale_shape_manual(values = c(15,16,17,18)) + # set shape for region manually
+  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + # set color for region manually
+  theme_bw() + # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text = element_text(size = 24, colour = "black"), # set axis text size and color
+        legend.position = "right", # show legend on the right
+        axis.title = element_text(size = 25, colour = "black")) + # set axis title size and color
+  theme(legend.title = element_text(size = 25)) + # set legend title size
+  theme(legend.text = element_text(size = 24)) + # set legend text size
+  annotate("text", x = 30, y = 850, size = 6, colour ="black", # specify position, size, and color of text to be annotated
+           label = "italic(R)^{2}==3.495e-07*','~italic(p)==0.99", parse = TRUE) + # add the text to be annotated
+  labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Fragmentation Rate (%)")) # add x and y axis titles
 
+## Export Figure as JPG
 
-jpeg("~/Desktop/Dissolution_fragrate16122022.jpg",width=6000,height=3500,units="px",res=600,bg="white", pointsize = 8)
-Size_vs_frag_rate
-dev.off()
-
-#Export all 4 Figures as a single PNG file
-
-jpeg("~/Desktop/Dissolution Indices_B_29082022.jpg",width=7124,height=4424,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(Size_vs_Depth)
-dev.off()
-
-jpeg("~/Desktop/Dissolution Indices_C_29082022.jpg",width=7124,height=4424,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(Size_vs_Delta_carbonate_at_core_depth)
-dev.off()
-
-jpeg("~/Desktop/Dissolution Indices_D_29082022.jpg",width=7124,height=4424,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(Size_vs_frag_rate)
+jpeg("~/Desktop/Figure 6c.jpg",width = 6000, height = 3500,units = "px",res = 600,bg = "white", pointsize = 8)
+Size_vs_frag_rate # save the figure object in jpeg format
 dev.off()
 
 #******************************************************************
