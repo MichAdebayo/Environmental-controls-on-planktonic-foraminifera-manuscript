@@ -35,7 +35,7 @@ library("LaplacesDemon")
 library("robustbase")
 
 ##****************************************
-## Test data for Data normality ----------
+## Test for Data normality ----------
 ##****************************************
 
 jarque.bera.test(All_species_unimod_test$size) #Test whether size data follows a normal distribution using the Jarque-Bera test method
@@ -44,12 +44,12 @@ jarque.bera.test(All_species_unimod_test$size) #Test whether size data follows a
 # Figure 3b (Human vs Machine) ----------
 #****************************************
 
-# Load Data:: Human vs Machine Count (Total Individual and Mean Species Count)
+## Load Data:: Human vs Machine Count (Total Individual and Mean Species Count)
 
 Human_vs_Machine_1 <- read.csv("Human_vs_machine_total_individual_species_count.csv", header = TRUE, sep = ',')
 Human_vs_Machine_2 <- read.csv("Human_vs_machine_total_mean_species_count.csv", header = TRUE, sep = ',')
 
-# Plot Figure
+## Plot Figure
 
 Human_vs_Machine <- ggplot(NULL, 
                            aes(Total_Machine_Count, Total_Human_Count)) + # specify columns for x and y axes (individual species count)
@@ -91,11 +91,11 @@ Human_vs_Machine <- ggplot(NULL,
   theme(legend.text = element_text(face = "italic", size = 24)) + # customize legend text size and format in 'italics'
   theme(legend.title = element_text(size = 25)) # customize legend title text size 
 
-# Add and Customize Axis Titles
+## Add and Customize Axis Titles
 
 Human_vs_Machine_exp  <- Human_vs_Machine + # recall saved plot above (remember the plot above was saved as the object: Human_vs_Machine)
-  theme(axis.text=element_text(size = 24, colour = "black"), # change the size and color of the axis texts 
-  axis.title=element_text(size = 25, colour = "black")) + # change the size and color of the title texts 
+  theme(axis.text = element_text(size = 24, colour = "black"), # change the size and color of the axis texts 
+  axis.title = element_text(size = 25, colour = "black")) + # change the size and color of the title texts 
   annotate("text", x = 90, y = 2700, size = 7, # specify position and size for text to be annotated
            label = "Total number of forams compared") + # add the text to be annotated
   annotate("text", x = 70, y = 2300, size = 7, # specify position and size for the second text to be annotated
@@ -108,7 +108,7 @@ Human_vs_Machine_exp  <- Human_vs_Machine + # recall saved plot above (remember 
            label = "italic(y)*'='~italic(x)", parse = TRUE) + # add the fifth text to be annotated
   labs(y = "Number Counted by Human Recognition", x = "Number Counted by CNN Recognition")  # add titles for x and y axes
 
-#Export Figure as JPG
+## Export Figure as JPG
 
 jpeg("~/Desktop/Figure3b.jpg", width = 10500, height = 6800, units = "px",res = 600, bg = "white", pointsize = 8)
 Human_vs_Machine_exp # save the new figure object in jpeg format
@@ -119,16 +119,16 @@ dev.off()
 ## Figure 4a (This study vs ForCenS) ----------
 ##*********************************************
 
-# Load Data:: Relative Abundance (This study) vs Relative Abundance (ForCenS)
+## Load Data:: Relative Abundance (This study) vs Relative Abundance (ForCenS)
 
 Relative_abundance_comparison_vs_ForCens <- read.csv("Relative_abundance_comparison_with_ForCens.csv", header = TRUE, sep = ',')
 
-# Plot Figure
+## Plot Figure
 
 Relative_Abundance_Comparison <- ggplot(Relative_abundance_comparison_vs_ForCens, # specify data object
-                                        aes(x = rel_abund_in_ForCens_database, y = rel_abund_from_machine_count)) + # specify column for x and y axes
-  geom_point(aes(color = Species, # Give each species its own color
-                 shape = Species), # Give each species its own unique shape
+                                        aes(x = rel_abund_in_ForCens_database, y = rel_abund_from_machine_count)) + # specify columns for x and y axes
+  geom_point(aes(color = Species, # give each species its own color
+                 shape = Species), # give each species its own unique shape
              size = 5) + # set shape size
   scale_x_log10(limits = c(0.1,100)) + # convert values on x axis to logarithmic scale and restrict values between 0.1 and 100
   scale_y_log10(limits = c(0.1,100)) + # convert values on y axis to logarithmic scale and restrict values between 0.1 and 100
@@ -152,15 +152,15 @@ Relative_Abundance_Comparison <- ggplot(Relative_abundance_comparison_vs_ForCens
   guides(shape = guide_legend(override.aes = list(size = 7))) +  # set a new size for the shapes of species in legend
   theme(legend.title = element_text(size = 25)) # customize legend title text size 
 
-# Add y = x  Line
+## Add y = x  Line
 
 Relative_Abundance_abline <- Relative_Abundance_Comparison + geom_abline(intercept = 0, slope = 1, color = 'gray40', size = .6) # add y = x line and specify the color and size of the line (i.e., the line that cuts across the figure)
 
-# Add and Customize Axis Titles
+## Add and Customize Axis Titles
 
 Relative_Abundance_abline_Exp <- Relative_Abundance_abline + # load plot object above
-  theme(axis.text=element_text(size = 24, colour = "black"), # change the size and color of the axis texts 
-        axis.title=element_text(size=25, colour = "black")) + # change the size and color of the title texts 
+  theme(axis.text = element_text(size = 24, colour = "black"), # change the size and color of the axis texts 
+        axis.title = element_text(size = 25, colour = "black")) + # change the size and color of the title texts 
   annotate("text", x = 0.3, y = 100, size = 10, # specify position and size for text to be annotated
            label = "italic(ρ)==0.77*','~italic(p)", parse = TRUE) + # add the text to be annotated
   annotate("text", x = 1.6, y = 100, size = 10, # specify position and size for second text to be annotated
@@ -170,79 +170,85 @@ Relative_Abundance_abline_Exp <- Relative_Abundance_abline + # load plot object 
   labs(y = "Relative Abundance ((This Study) %)", x = "Relative Abundance ((ForCenS) %)") # add titles for x and y axes
 
 
-#Export Figure as JPG
+## Export Figure as JPG
 
 jpeg("~/Desktop/Figure 4a.jpg", width = 6700, height = 6000, units = "px",res = 500, bg = "white", pointsize = 8)
 Relative_Abundance_abline_Exp # save the new figure object in jpeg format
 dev.off()
 
-#******************************************************************
-#Figure 4b (This study vs Rillo et al. (2020) --------------------
-#******************************************************************
+##********************************************************
+## Figure 4b (This study vs Rillo et al. 2020) ----------
+##********************************************************
 
-#Load Data:: Comparison between CNN Size vs Rillo et al. size distribution with error bars (standard deviation)
+## Load Data:: Comparison between CNN Size vs Rillo et al. size distribution with error bars (standard deviation)
 
 this_study_size_vs_rillo <- read.csv("size_this_study_vs_rillo_et_al.csv", header = TRUE, sep = ',')
 
-#Plot Figure
+## Plot Figure
 
-#Set sd (Standard Deviation) lower and upper limit for error bar 
+## Set standard deviation (sd) lower and upper limit for error bar 
 
-ymin = this_study_size_vs_rillo$machine_size - this_study_size_vs_rillo$sd
-ymax = this_study_size_vs_rillo$machine_size + this_study_size_vs_rillo$sd
+ymin = this_study_size_vs_rillo$machine_size - this_study_size_vs_rillo$sd # calculate minimum values for species' size range based on sd
+ymax = this_study_size_vs_rillo$machine_size + this_study_size_vs_rillo$sd # calculate maximum values for species' size range based on sd
 
-#Preliminary Figure Plot
+## Preliminary Figure Plot
 
-this_study_size_vs_rillo_plot <- ggplot(this_study_size_vs_rillo, 
-                                        aes(rillo_size, machine_size)) + 
-  geom_point(aes(color = Species, shape = Species), size = 8) + 
-  scale_color_manual(aesthetics = "colour", values = c("#DC050C","#67c675", "#a7bc45", "#6a70d7", "#6aa13f",
-                                                       "#ce9534","#6d8bd6","#cd6d3b", "#33d4d1","#c9417e",
-                                                       "#47bb8a", "#a54190", "#4a6e24","#ca86ce", "#af9e4d", 
-                                                       "#802657", "#72190E","#dd5858","#42150A", "#b44555")) + 
-  scale_shape_manual(values = c(1,5,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,3,24)) + 
-  geom_errorbar(aes(ymin=ymin, ymax=ymax)) +
-  theme_bw() + 
-  theme(legend.position= "right") + 
-  theme(axis.line  = element_line(colour = "black",size=0), 
-        panel.border = element_rect(colour = "black", fill=NA, size=1),panel.grid.minor = element_blank(), panel.grid.major = element_blank()) + 
-  theme(legend.text = element_text(face = "italic", size = 24)) + 
-  guides(shape = guide_legend(override.aes = list(size = 7))) + 
-  theme(legend.title = element_text(size = 25)) 
+this_study_size_vs_rillo_plot <- ggplot(this_study_size_vs_rillo, # specify data object
+                                        aes(rillo_size, machine_size)) + # specify columns for x and y axes
+  geom_point(aes(color = Species, # give each species its own color
+                 shape = Species), # give each species its own shape
+             size = 8) + # format shape size
+  scale_color_manual(aesthetics = "colour", # specify the color representing each species manually
+                     values = c("#DC050C","#67c675", "#a7bc45", "#6a70d7", "#6aa13f",
+                                "#ce9534","#6d8bd6","#cd6d3b", "#33d4d1","#c9417e",
+                                "#47bb8a", "#a54190", "#4a6e24","#ca86ce", "#af9e4d", 
+                                "#802657", "#72190E","#dd5858","#42150A", "#b44555")) + 
+  scale_shape_manual(values = c(1,5,7,8,9,11,12,13,14, # specify the shape representing each species manually
+                                15,16,17,18,19,20,21,22,23,3,24)) + 
+  geom_errorbar(aes(ymin = ymin, ymax = ymax)) + # add error bars 
+  theme_bw() + # make background white
+  theme(legend.position = "right") + # place legend to the right of the figure
+  theme(axis.line  = element_line(colour = "black",size = 0), # set x and y axis line colors to black
+        panel.border = element_rect(colour = "black", fill = NA, size = 1), # format panel border color to black and make size of the border 1
+        panel.grid.minor = element_blank(), # remove minor grid lines in figure
+        panel.grid.major = element_blank()) + # remove major grid lines in figure
+  theme(legend.text = element_text(face = "italic", size = 24)) + # customize legend text size and format in 'italics'
+  guides(shape = guide_legend(override.aes = list(size = 7))) + # customize size of species' shapes in legend
+  theme(legend.title = element_text(size = 25)) # customize legend title text size 
 
-#Set Fixed X and Y Coordinates
+## Set Fixed X and Y Coordinates
 
 this_study_size_vs_rillo_plots <- this_study_size_vs_rillo_plot + 
-  coord_fixed(ratio = 1, xlim = c(1,1240), ylim = c(1,1240), expand = T, clip = "on")
+  coord_fixed(ratio = 1, xlim = c(1,1240), ylim = c(1,1240), expand = T, clip = "on") # set limits for the values on the x and y axes; this is to ensure the same value ranges on both axes
 
-#Add y = x Line
+## Add y = x Line
 
 this_study_size_vs_rillo_plots_final <- this_study_size_vs_rillo_plots + 
-  geom_abline(intercept = 0, slope = 1, color = 'black', size = .6)
+  geom_abline(intercept = 0, slope = 1, color = 'black', size = .6) # add y = x line and specify the color and size of the line (i.e., the line that cuts across the figure)
 
 
-#Add and Customize Axis Titles
+## Add and Customize Axis Titles
 
-this_study_size_vs_rillo_plots_final_exp <- this_study_size_vs_rillo_plots_final + 
-  theme(axis.text=element_text(size = 24),
-        axis.title=element_text(size=25, colour = "black")) + 
-  annotate("text", x = 220, y = 1200, size = 8, 
-           label = "italic(ρ)==0.94*','~italic(p)", parse = TRUE) +
-  annotate("text", x = 535, y = 1200, size = 8, 
-           label = "= 5.9e-06") +
-  annotate("text", x = 1100, y = 1200, size = 8, 
-           label = "italic(y)*' ='~italic(x)", parse = TRUE) + 
-  labs(y = "CNN size (μm)", x = "Buckley collection + Resampled data size (μm)")
+this_study_size_vs_rillo_plots_final_exp <- this_study_size_vs_rillo_plots_final + # load plot object above
+  theme(axis.text = element_text(size = 24), # change the size and color of the axis texts
+        axis.title = element_text(size = 25, colour = "black")) + # change the size and color of the title texts
+  annotate("text", x = 220, y = 1200, size = 8, # specify position and size for text to be annotated
+           label = "italic(ρ)==0.94*','~italic(p)", parse = TRUE) + # add the text to be annotated
+  annotate("text", x = 535, y = 1200, size = 8, # specify position and size for second text to be annotated
+           label = "= 5.9e-06") + # add the second text to be annotated
+  annotate("text", x = 1100, y = 1200, size = 8,# specify position and size for third text to be annotated
+           label = "italic(y)*' ='~italic(x)", parse = TRUE) + # add the third text to be annotated
+  labs(y = "CNN size (μm)", x = "Buckley collection + Resampled data size (μm)") # add titles for x and y axes
 
 #Export Figure as JPG
 
-jpeg("~/Desktop/CNN vs Rillo with error bars25092022.jpg",width=6700,height=6000,units="px",res=600,bg="white")
-this_study_size_vs_rillo_plots_final_exp
+jpeg("~/Desktop/Figure 4b.jpg", width = 6700, height = 6000, units = "px",res = 600, bg = "white")
+this_study_size_vs_rillo_plots_final_exp # save the new figure object in jpeg format
 dev.off()
 
 
 #******************************************************************
-#Figure 6 (Factor Analysis for Assemblage distribution) ---------
+#Figure 5 (Factor Analysis for Assemblage distribution) ---------
 #******************************************************************``
 
 #Load Data:: Assemblage Distribution Factor Analysis (Groundtruthing Cayre et al. 1997)
