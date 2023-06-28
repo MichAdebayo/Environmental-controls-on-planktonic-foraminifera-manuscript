@@ -441,135 +441,145 @@ jpeg("~/Desktop/Figure 7.jpg",width = 1750, height = 2700, units = "px",res = 50
 Densityplot_italicized # save the figure object in jpeg format
 dev.off()
 
+##***********************************************************
+## Test for modality of each species' distribution ----------
+##***********************************************************
 
-# Test of unimodality, bimodality, and multimodality
+is.unimodal(B_digitata_unimod_test$size)
+
+is.multimodal(C_nitida_unimod_test$size)
+is.bimodal(C_nitida_unimod_test$size)
+
+is.multimodal(G_vivans_unimod_test$size)
 
 is.unimodal(B_bulloides_unimod_test$size)
 
-is.unimodal(B_digitata_unimod_test$size)
+is.unimodal(G_falconensis_unimod_test$size)
 
 is.multimodal(G_adamsi_unimod_test$size)
 
 is.multimodal(G_calida_unimod_test$size)
 
+is.unimodal(G_siphonifera_unimod_test$size)
+
+is.unimodal(G_glutinata_unimod_test$size)
+
+is.unimodal(G_uvula_unimod_test$size)
+
 is.unimodal(G_conglobatus_unimod_test$size)
+
+is.unimodal(G_elongatus_unimod_test$size)
+
+is.unimodal(G_ruber_unimod_test$size)
 
 is.unimodal(G_conglomerata_unimod_test$size)
 
 is.unimodal(G_crassaformis_unimod_test$size)
 
-is.unimodal(G_elongatus_unimod_test$size)
-
-is.unimodal(G_falconensis_unimod_test$size)
-
-is.unimodal(G_glutinata_unimod_test$size)
-
-is.multimodal(G_hexagonus_unimod_test$size)
-
 is.unimodal(G_hirsuta_unimod_test$size)
 
 is.unimodal(G_inflata_unimod_test$size)
 
-is.unimodal(G_menardii_unimod_test$size)
-
-is.unimodal(G_ruber_unimod_test$size)
-
-is.unimodal(G_rubescens_unimod_test$size)
-
-is.unimodal(G_sacculifer_unimod_test$size)
+is.multimodal(G_menardii_unimod_test$size)
 
 is.unimodal(G_scitula_unimod_test$size)
-
-is.unimodal(G_siphonifera_unimod_test$size)
-
-is.unimodal(G_tenella_unimod_test$size)
 
 is.unimodal(G_trucatulinoides_unimod_test$size)
 
 is.unimodal(G_tumida_unimod_test$size)
 
-is.unimodal(G_ungulata_unimod_test$size)
+is.multimodal(G_ungulata_unimod_test$size)
 
-is.unimodal(G_uvula_unimod_test$size)
+is.multimodal(G_hexagonus_unimod_test$size)
 
-is.unimodal(G_vivans_unimod_test$size)
+is.unimodal(G_rubescens_unimod_test$size)
+
+is.unimodal(G_tenella_unimod_test$size)
 
 is.unimodal(H_pelagica_unimod_test$size)
 
-is.unimodal(N_dutertrei_unimod_test$size)
+is.multimodal(N_dutertrei_unimod_test$size)
 
 is.unimodal(N_incompta_unimod_test$size)
 
-is.unimodal(O_universa_unimod_test$size)
+is.multimodal(N_pachyderma_unimod_test$size)
+is.bimodal(N_pachyderma_unimod_test$size)
+
+is.multimodal(O_universa_unimod_test$size)
 
 is.unimodal(P_obliquiloculata_unimod_test$size)
 
-is.unimodal(N_pachyderma_unimod_test$size)
-
-is.bimodal(N_pachyderma_unimod_test$size)
-
-is.unimodal(C_nitida_unimod_test$size)
-is.bimodal(C_nitida_unimod_test$size)
-
-is.unimodal(S_dehiscens_unimod_test$size)
-
-is.unimodal(T_humilis_unimod_test$size)
+is.multimodal(S_dehiscens_unimod_test$size)
 
 is.unimodal(T_iota_unimod_test$size)
 
-is.unimodal(T_quinqueloba_unimod_test$size)
+is.unimodal(G_sacculifer_unimod_test$size)
 
-# Export Figure as EPS
+is.unimodal(T_humilis_unimod_test$size)
 
-cairo_ps(filename='Density Plot.eps', width=18.75,height=29.2,family = "Arial",
-         pointsize = 16, fallback_resolution = 500)
-Densityplot_italicized
+is.multimodal(T_quinqueloba_unimod_test$size)
+
+
+##************************************************************
+## Figure 8 (Test for Optimum Size–Hypothesis, 0SH) ----------
+##************************************************************
+
+## Load Data::Optimum Size-Hypothesis
+
+Opt_size_hyp_test <- read.csv("Opt_size_hyp_test_data.csv", header = TRUE, sep = ',')
+
+## Plot Figure
+
+## Single-species robust regression analyses with p-values corrected for multiple testing
+
+OSH_Exp <- ggplot(Opt_size_hyp_test, # specify data object
+                   aes(x = Sp_rel_abund, y = Size)) + # specify columns for x and y axes
+  geom_point() + # Add data points
+  facet_wrap(~Species, # create separate regression analysis on a per species basis (i.e., grouping by species)
+             scales = "free_x", # base the x-axis value range of each plot on the relative abundance data for that species
+             shrink = T, # shrink scales to fit output of statistics, not raw data
+             as.table = T) + # permit facet layout as a table 
+  stat_smooth(method = "rlm", # fit robust linear model 
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set size of the regression line
+              fullrange = T) + # let the regression line go from end-to-end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set text size and format of x-axis text 
+  expand_limits(x = 0, y = 0) + # set plot to start from 0 (and not the lowest relative abundance or size values per species) on both x and y axes
+  scale_x_continuous(limits = c(0, NA), # set x-axis values lower limit to 0 and max to be as present in the data per species
+                     expand = expansion(mult = c(0, NA))) + # add some padding around the data to ensure that they are placed some distance away from the axes
+  theme(panel.spacing = unit(2.3, "lines")) + # set panel spacing
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text = element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title = element_text(size = 24, colour = "black", face = "bold")) + # set axis title size, color, and format
+  guides(size = "none") + # do not set any value to the size scale
+  labs(x = expression("Relative Abundance (%)"), y = expression("Size (µm)")) # add x and y axis titles
+
+jpeg("~/Desktop/Figure 8.jpg", width = 15000, height = 10500, units = "px",res = 700, bg = "white", pointsize = 8)
+OSH_Exp # save the figure object in jpeg format
 dev.off()
 
+## p-value correction for multiple testing
+
+alpha <- (0.025) # Set Bonferroni alpha 
+
+bonfer_test$bonferroni_sig_2 <- p.adjust(bonfer_test$pvalue, # load the initial p-values for each species' regression fit
+                                         method = "bonferroni") < alpha # Determine whether p-value is significant at alpha level after bonferroni correction
 
 
-#*****************************************************************
-#Figure 9 (Optimum size hypothesis + size vs SR and SD) ---------
-#*****************************************************************
+##*********************************************************************
+## Figure 10 Size vs Species Richness and Species Diversity) ----------
+##*********************************************************************
 
-#Load Data::Size vs Species Richness, Size vs Species Diversity, & Temperature at Maximum size vs Temperature at Maximum Relative Abundance
+## Load Data::Size vs Species Richness, Size vs Species Diversity
 
 All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
-Temperature_at_max_size_vs_temperature_at_max_relative_abundance <- read.csv("Temp_at_max_size_vs_Temp_at_max_rel_abund.csv", header = T, sep = ',')
 
-#Plot Figures
+## Plot Figures
 
-# (a) Single-species robust regression analyses with p-values corrected for multiple testing
-
-robust.m <- ggplot(Opt_hyp_test, aes(x=Sp_rel_abund, y=Size)) + 
-  geom_point() +
-  facet_wrap(~Species, scales = "free_x", shrink = T, as.table = T) + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  #stat_regline_equation(aes(label = paste(..rr.label.., sep = "~~~~"))) +
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  expand_limits(x = 0, y = 0) +
-  scale_x_continuous(limits = c(0, NA), expand = expansion(mult = c(0, NA))) +
-  theme(panel.spacing = unit(2.3, "lines")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=24, colour = "black", face = "bold")) +
-  guides(size = "none") +
-  labs(x = expression("Relative Abundance (%)"), y = expression("Size (µm)")) 
-
-jpeg("~/Desktop/Opt_size_16122022_3.jpg",width=15000,height=10500,units="px",res=700,bg="white", pointsize = 8)
-robust.m
-dev.off()
-
-# p-value correction for multiple testing
-
-alpha <- (0.025) #Set Bonferroni alpha 
-
-bonfer_test$bonferroni_sig_2 <- p.adjust(bonfer_test$pvalue, 
-                                         method = "bonferroni") < alpha #Add True or False
-
-
-# (b) Size vs Species Richness
+## (b) Size vs Species Richness
 
   Size_vs_species_richness <- ggplot(All_core_site_data,
                                      aes(species_richness,size)) + 
