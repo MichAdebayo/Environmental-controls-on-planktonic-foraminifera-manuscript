@@ -72,7 +72,7 @@ Human_vs_Machine <- ggplot(NULL,
                  alpha = 0.9, size = Mean)) + # specify transparency level and size for each bubble (here size is scaled to the mean values for each species)
   scale_size_continuous(range = c(4,28),  # restrict bubble size of species' mean count between 4 and 28
                         name = 'Mean Count (Upper Limit)') + # add title to the legend for the mean size bubbles
-  theme_bw() + # make background white
+  theme_bw() + # set background to white
   theme(legend.position = "right") + # place legend to the right of the figure
   theme(axis.line  = element_line(colour = "black",size = 0), # set x and y axis line colors to black
         panel.border = element_rect(colour = "black", fill=NA, size = 1), # format panel border color to black and make size of the border 1
@@ -96,11 +96,11 @@ Human_vs_Machine <- ggplot(NULL,
 Human_vs_Machine_exp  <- Human_vs_Machine + # recall saved plot above (remember the plot above was saved as the object: Human_vs_Machine)
   theme(axis.text = element_text(size = 24, colour = "black"), # change the size and color of the axis texts 
   axis.title = element_text(size = 25, colour = "black")) + # change the size and color of the title texts 
-  annotate("text", x = 90, y = 2700, size = 7, # specify position and size for text to be annotated
+  annotate("text", x = 90, y = 2700, size = 7, # specify position and size of text to be annotated
            label = "Total number of forams compared") + # add the text to be annotated
-  annotate("text", x = 70, y = 2300, size = 7, # specify position and size for the second text to be annotated
+  annotate("text", x = 70, y = 2300, size = 7, # specify position and size of the second text to be annotated
            label = "italic(n)==127097", parse = TRUE) + # add the second text to be annotated
-  annotate("text", x = 60, y = 1800, size = 7, # specify position and size for the third text to be annotated
+  annotate("text", x = 60, y = 1800, size = 7, # specify position and size of the third text to be annotated
             label = "italic(ρ)==0.97*','~italic(p)", parse = TRUE) + # add the third text to be annotated
   annotate("text", x = 145, y = 1800, size = 7, # specify position and size for the fourth text to be annotated
            label = "< 2.2e-16") + # add the fourth text to be annotated
@@ -141,7 +141,7 @@ Relative_Abundance_Comparison <- ggplot(Relative_abundance_comparison_vs_ForCens
                                 "#b44555")) + 
   scale_shape_manual(values = c(4,5,6,7,8,9,10,11,12,13, # specify the shape representing each species manually
                                 14,15,16,17,18,19,20,21,22,23,24)) + 
-  theme_bw () + # make background white
+  theme_bw () + # set background to white
   theme(legend.position = "right") + # place legend to the right of the figure
   theme(axis.line  = element_line(colour = "black",size=0), # set x and y axis line colors to black
         panel.border = element_rect(colour = "black", fill = NA, size = 1), # format panel border color to black and make size of the border 1
@@ -161,11 +161,11 @@ Relative_Abundance_abline <- Relative_Abundance_Comparison + geom_abline(interce
 Relative_Abundance_abline_Exp <- Relative_Abundance_abline + # load plot object above
   theme(axis.text = element_text(size = 24, colour = "black"), # change the size and color of the axis texts 
         axis.title = element_text(size = 25, colour = "black")) + # change the size and color of the title texts 
-  annotate("text", x = 0.3, y = 100, size = 10, # specify position and size for text to be annotated
+  annotate("text", x = 0.3, y = 100, size = 10, # specify position and size of text to be annotated
            label = "italic(ρ)==0.77*','~italic(p)", parse = TRUE) + # add the text to be annotated
-  annotate("text", x = 1.6, y = 100, size = 10, # specify position and size for second text to be annotated
+  annotate("text", x = 1.6, y = 100, size = 10, # specify position and size of second text to be annotated
            label = "< 2.2e-16") + # add the second text to be annotated
-  annotate("text", x = 65, y = 100, size = 10, # specify position and size for third text to be annotated
+  annotate("text", x = 65, y = 100, size = 10, # specify position and size of third text to be annotated
            label = "italic(y)*' ='~italic(x)", parse = TRUE) + # add the third text to be annotated
   labs(y = "Relative Abundance ((This Study) %)", x = "Relative Abundance ((ForCenS) %)") # add titles for x and y axes
 
@@ -206,7 +206,7 @@ this_study_size_vs_rillo_plot <- ggplot(this_study_size_vs_rillo, # specify data
   scale_shape_manual(values = c(1,5,7,8,9,11,12,13,14, # specify the shape representing each species manually
                                 15,16,17,18,19,20,21,22,23,3,24)) + 
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) + # add error bars 
-  theme_bw() + # make background white
+  theme_bw() + # set background to white
   theme(legend.position = "right") + # place legend to the right of the figure
   theme(axis.line  = element_line(colour = "black",size = 0), # set x and y axis line colors to black
         panel.border = element_rect(colour = "black", fill = NA, size = 1), # format panel border color to black and make size of the border 1
@@ -232,57 +232,76 @@ this_study_size_vs_rillo_plots_final <- this_study_size_vs_rillo_plots +
 this_study_size_vs_rillo_plots_final_exp <- this_study_size_vs_rillo_plots_final + # load plot object above
   theme(axis.text = element_text(size = 24), # change the size and color of the axis texts
         axis.title = element_text(size = 25, colour = "black")) + # change the size and color of the title texts
-  annotate("text", x = 220, y = 1200, size = 8, # specify position and size for text to be annotated
+  annotate("text", x = 220, y = 1200, size = 8, # specify position and size of text to be annotated
            label = "italic(ρ)==0.94*','~italic(p)", parse = TRUE) + # add the text to be annotated
-  annotate("text", x = 535, y = 1200, size = 8, # specify position and size for second text to be annotated
+  annotate("text", x = 535, y = 1200, size = 8, # specify position and size of second text to be annotated
            label = "= 5.9e-06") + # add the second text to be annotated
-  annotate("text", x = 1100, y = 1200, size = 8,# specify position and size for third text to be annotated
+  annotate("text", x = 1100, y = 1200, size = 8,# specify position and size of third text to be annotated
            label = "italic(y)*' ='~italic(x)", parse = TRUE) + # add the third text to be annotated
   labs(y = "CNN size (μm)", x = "Buckley collection + Resampled data size (μm)") # add titles for x and y axes
 
-#Export Figure as JPG
+## Export Figure as JPG
 
 jpeg("~/Desktop/Figure 4b.jpg", width = 6700, height = 6000, units = "px",res = 600, bg = "white")
 this_study_size_vs_rillo_plots_final_exp # save the new figure object in jpeg format
 dev.off()
 
 
-#******************************************************************
-#Figure 5 (Factor Analysis for Assemblage distribution) ---------
-#******************************************************************``
+##****************************************************************
+#Figure 5 (Factor Analysis for Assemblage distribution) ----------
+##****************************************************************
 
-#Load Data:: Assemblage Distribution Factor Analysis (Groundtruthing Cayre et al. 1997)
+## Load Data:: Assemblage Distribution Factor Analysis (Groundtruthing Cayre et al. 1997)
 
 All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
 
-#(a) Assemblage F1 Scores vs Primary Productivity
+## (a) Assemblage F1 Scores vs Primary Productivity
 
-F1assemblagevspp <- ggplot(All_core_site_data, aes(logpp,F1assemblage)) + 
-  geom_point(size = 3) + 
-  geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, show.legend = F, colour = "black") + 
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  theme(axis.text=element_text(size = 12, colour = "black"), legend.position = "none",
-        axis.title=element_text(size=14, colour = "black", face = "bold")) +
-  annotate("text", x = 3.17, y = 1.1, size = 5, colour ="black", label = "italic(R)^{2}==0.61*','~italic(p)==2.26e-06", parse = TRUE) +
-  labs(y = expression("F1 Scores (Assemblage)"), 
-       x = expression(Log (Primary ~ Productivity ~ (mgC ~ m^{-2}~d^{-1}))))
+F1assemblage_vs_pp <- ggplot(All_core_site_data, # specify data object
+                             aes(logpp,F1assemblage)) + # specify columns for x and y axes
+  geom_point(size = 3) + # Add point size
+  geom_smooth(method = "rlm", # fit robust linear model
+              se=T, # show confidence interval
+              size = .5, # set size of regression line
+              show.legend = F, # turn off legend
+              colour = "black") + # set color of regression line
+  theme_bw() +  # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text = element_text(size = 12, colour = "black"), # set axis text size and color
+        legend.position = "none", # don't show legend
+        axis.title = element_text(size=14, colour = "black", face = "bold")) + # set axis title size, color, and format
+  annotate("text", x = 3.17, y = 1.1, size = 5, colour ="black", # specify position, size, and color of text to be annotated
+           label = "italic(R)^{2}==0.61*','~italic(p)==2.26e-06", parse = TRUE) + # add the text to be annotated
+  labs(y = expression("F1 Scores (Assemblage)"), # add title of y axis
+       x = expression(Log (Primary ~ Productivity ~ (mgC ~ m^{-2}~d^{-1})))) # add title of x axis
 
-#(b) Assemblage F2 Scores vs SST
 
-F2assemblagevssst <- ggplot(All_core_site_data,aes(sst,F2assemblage)) + 
-  geom_point(size = 3) +
-  geom_smooth(method=lm,se=T, size = .5, show.legend = F, colour = "black") + 
-  theme_bw()+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  theme(axis.text=element_text(size = 12, colour = "black"), legend.position = "none",
-        axis.title=element_text(size=14, colour = "black", face = "bold")) +
-  annotate("text", x = 26, y = 3.8, size = 5, colour ="black", label = "italic(R)^{2}==0.46*','~italic(p)==6.52e-4", parse = TRUE) +
-  labs(y = expression("F2 Scores (Assemblage)"), x = expression("SST(°C)"))
+## (b) Assemblage F2 Scores vs SST
 
-#Export Figure as PNG
+F2assemblage_vs_sst <- ggplot(All_core_site_data, # specify data object
+                              aes(sst,F2assemblage)) + # specify columns for x and y axes
+  geom_point(size = 3) + # Add point size
+  geom_smooth(method = "rlm", # fit robust linear model
+              se = T, # show confidence interval
+              size = .5, # set size of regression line
+              show.legend = F, # turn off legend
+              colour = "black") + # set color of regression line
+  theme_bw() + # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text = element_text(size = 12, colour = "black"), # set axis text size and color
+        legend.position = "none", # don't show legend 
+        axis.title = element_text(size = 14, colour = "black", face = "bold")) + # set axis title size, color, and format
+  annotate("text", x = 26, y = 3.8, size = 5, colour ="black", # specify position, size, and color of text to be annotated
+           label = "italic(R)^{2}==0.46*','~italic(p)==6.52e-4", parse = TRUE) + # add the text to be annotated
+  labs(y = expression("F2 Scores (Assemblage)"), x = expression("SST(°C)")) # add x and y axis titles
 
-jpeg("~/Desktop/Factorial Analysis for size and Assemblage Data26122022.jpg",width=6000,height=2500,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(F1assemblagevspp,F2assemblagevssst, ncol = 2, nrow = 1)
+## Export Figure as JPG
+
+jpeg("~/Desktop/Figure 5.jpg", width = 6000, height = 2500, units = "px",res = 600, bg = "white", pointsize = 8)
+ggarrange(F1assemblage_vs_pp,F2assemblage_vs_sst, # save the new figure object in jpeg format
+          ncol = 2, nrow = 1) # set number of columns and row to arrange the figure
 dev.off()
 
 #******************************************************************
