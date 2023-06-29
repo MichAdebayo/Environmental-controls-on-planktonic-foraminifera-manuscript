@@ -783,9 +783,9 @@ jpeg("~/Desktop/Figure 12.jpg", width = 15000, height = 5000, units = "px", res 
 ggarrange(ggarrange(F1size_vs_surf_carb,F2size_vs_SST, ncol = 2)) # save and arrange the figure object into 2 columns and in jpeg format
 dev.off() 
 
-##*************************************************
-## Figure S4 in Supporting Information 1 ----------
-##*************************************************
+##*******************************************************************************************************
+## Figure S4 in Supporting Information 1 (Rillo et al 2019 TIO size data vs SST for 9 species) ----------
+##*******************************************************************************************************
 
 ## Load Data:: Rillo et al Size for 9 Species (tropical Indian Ocean samples only) vs SST 
 
@@ -971,41 +971,12 @@ Rillo_Analyzed <- ggarrange(Rillo_PO,Rillo_GMen,Rillo_NDurt,Rillo_GRub, Rillo_GS
 ## Export Figure as JPEG
 
 jpeg("~/Desktop/Figure S4 in Supporting Information 1.jpg",width=6000,height=5000,units="px",res=500,bg="white", pointsize = 8)
-Rillo_Analyzed
+Rillo_Analyzed # save figure object in jpeg format
 dev.off()
 
-#******************************************************************
-#Figure S4 in Supplementary information S4 (Data + Code) ---------
-#******************************************************************
-
-#Load Data:: Inflata size vs SST
-
-infalata_vs_sst_data <- read.csv("infalata_vs_sst.csv", header = TRUE, sep = ',')
-
-#Plot Figure
-
-inflata_vs_sst_plot <- ggscatter(infalata_vs_sst_data, x = "infla", y = "sst", 
-                                 add = "reg.line", conf.int = TRUE, size = 1,
-                                 cor.coef = F, cor.coeff.args = list(method = "pearson", label.x.npc = "middle", label.y.npc = "top"), add.params = list(color = "black", fill = "lightgray", size = 0.5),
-                                 xlab = ("Size (µm) "), ylab = "Sea surface temperature (°C)") +
-  annotate("text", label = "R2 = – 0.34, p < 0.05", x = 350, y = 30, size = 4, colour ="black") 
-
-#Export Figure as EPS
-
-cairo_ps(filename='inflata_vs_sst_plot.eps', width=18, height=16, family = "Arial",
-         pointsize = 8, fallback_resolution = 500)
-inflata_vs_sst_plot
-dev.off()
-
-#Export Figure as PNG
-
-png("~/Desktop/inflata_vs_sst_plot05052022.png",width=2000,height=1800,units="px",res=400,bg="white", pointsize = 8)
-inflata_vs_sst_plot
-dev.off()
-
-#**************************************************************************************
-# Supplementary Information S5a (Influence of assemblage distribution on size) --------
-#**************************************************************************************
+##***********************************************************************************************
+## Figure S5a in Supporting Information 1 (Influence of assemblage distribution on size) --------
+##***********************************************************************************************
 
 #Load Data::Influence of assemblage distribution on size (data only shown for the 13 most abundant species in the Equatorial Indian Ocean)
 
@@ -1014,48 +985,58 @@ stacked_area_plot_ordered_13_species_data <- read.csv("stacked_area_plot_ordered
 #Re-order the data according to core location (i.e. Arabian Sea, Bay of Bengal, Central Indian Ocean, and Mozambique Channel)
 
 stacked_area_plot_ordered_13_species_data_one$Coreids <- factor(stacked_area_plot_ordered_13_species_data_one$Coreid, 
-                                                            levels = c( "MD96-2045", "MD96-2044", "MD79-276","MD79-261","MD79-260", "MD76-011", 
-                                                                        "MD90-0936","MD90-0938",  "MD90-0939", "MD90-0940", "MD96-2049", "MD79-257",
+                                                            levels = c( "MD96-2045", "MD96-2044", "MD79-276", "MD79-261", "MD79-260", "MD76-011", 
+                                                                        "MD90-0936", "MD90-0938", "MD90-0939", "MD90-0940", "MD96-2049", "MD79-257",
                                                                         "MD96-2051", "MD96-2053", "MD96-2054", "MD96-2055", "MD96-2056", "MD96-2067a", 
-                                                                        "MD96-2067b", "MD96-2067b2","MD96-2058", "MD96-2059", "MD96-2066", "MD96-2065",
+                                                                        "MD96-2067b", "MD96-2067b2", "MD96-2058", "MD96-2059", "MD96-2066", "MD96-2065",
                                                                         "MD96-2061", "MD96-2063", "MD96-2064","MD96-2060", "MD98-2165", "BARP9442"))  
-#Set color pallette
+#Set color palette
 
-Paired <- colorRampPalette(brewer.pal('Paired',n=12), alpha = FALSE)
+Paired <- colorRampPalette(brewer.pal('Paired',n=12), alpha = FALSE) # set color palette to be mapped to species
 
 #Plot Figure
 
-stacked_area_plot_ordered_13_species_plot <- ggplot(stacked_area_plot_ordered_13_species_data_one, 
-                                                    aes(x= size, fill=Species)) +
-  geom_area(aes(y = stat(width*density*25)),  stat = "bin") + 
-  scale_fill_manual(values = setNames(Paired(13), levels(stacked_area_plot_ordered_13_species_data_one$Species))) + 
-  facet_wrap(~Coreids, nrow = 6, ncol = 5) + 
-  scale_x_continuous (limits=c(150,1300), breaks = seq(150, 1300, by = 250)) + 
-  geom_vline(aes(xintercept = size95), col="black") +
-  geom_vline(aes(xintercept = Norm_Mode), col="black", linetype = "longdash") +
-  theme(legend.position = 'right') + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 12)) +
-  theme(axis.text.x = element_text(angle=90,hjust=1, size=15)) + 
-  theme(axis.text.y = element_text(size=15)) + 
-  theme(axis.title = element_text(size=18)) + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ 
-  theme(legend.text = element_text(face = c(rep("italic", 5)))) + 
-  theme(legend.title = element_text(face = c(rep("bold", 5)), size = 18)) + 
-  theme(legend.text = element_text(size = 15)) + 
-  xlab("Size (μm)") +
-  ylab("Density")
+stacked_area_plot_ordered_13_species_plot <- ggplot(stacked_area_plot_ordered_13_species_data_one, # specify new data object
+                                                    aes(x = size, fill = Species)) + # specify columns for x-axis and set color by species
+  geom_area(aes(y = stat(width*density*25)),  # set statistical transformation to be applied to data
+            stat = "bin") + # make the height of each bar equal to the number of cases in each group
+  scale_fill_manual(values = setNames(Paired(13), # set color scheme and the number of species whose labels are to be mapped to a color in the color scheme (note: this is done in alphabetical order)
+                                      levels(stacked_area_plot_ordered_13_species_data_one$Species))) + # set column for labels
+  facet_wrap(~Coreids, # wrap panels by Core ID
+             nrow = 6, ncol = 5) + # set panel arrangement for the figures
+  scale_x_continuous (limits=c(150, 1300), # set lower and upper limits for x-axis value range
+                      breaks = seq(150, 1300, by = 250)) + # set the value by which ticks will be incremental and labeled between 150 and 1300
+  geom_vline(aes(xintercept = size95), # specify column that will be used to draw vertical line for the Size95 per assemblage
+             col="black") + # set vertical line color (note that no "line type" is set here, hence, a continuous line is drawn)
+  geom_vline(aes(xintercept = Norm_Mode), # specify column that will be used to draw vertical line for the modal size per assemblage
+             col="black", # set vertical line color
+             linetype = "longdash") + # set "long dash" as vertical line type 
+  theme(legend.position = 'right') + # show legend on the right
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 12)) + # set panel title text size
+  theme(axis.text.x = element_text(angle = 90, # set x-axis text angle
+                                   hjust = 1, # set horizontal justification (i.e., distance between axis text and panel)
+                                   size = 15)) + # set x-axis text size
+  theme(axis.text.y = element_text(size = 15)) + # set y-axis text size
+  theme(axis.title = element_text(size = 18)) + # set axis title text size
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(legend.text = element_text(face = c(rep("italic", 5)))) + # set legend text format
+  theme(legend.title = element_text(face = c(rep("bold", 5)), size = 18)) + # set legend title text format and size
+  theme(legend.text = element_text(size = 15)) + # set legend text size
+  xlab("Size (μm)") + # add x-axis title
+  ylab("Density") # add y-axis title
 
 
-#Export Figure as JPEG
+## Export Figure as JPEG
 
-jpeg("~/Desktop/stacked_area_plot_ordered_exp_04012023.jpg",width=8500,height=7181,units="px",res=600,bg="white", pointsize = 8)
-stacked_area_plot_ordered_13_species_plot
+jpeg("~/Desktop/Figure S5a in Supporting Information 1.jpg", width = 8500, height = 7181,units = "px", res = 600, bg = "white", pointsize = 8)
+stacked_area_plot_ordered_13_species_plot # save figure object in jpeg format
 dev.off()
 
-#**************************************************************************************
-# Supplementary Information S5b (Influence of assemblage distribution on size) --------
-#**************************************************************************************
+##***********************************************************************************************
+## Figure S5b in Supporting Information 1 (Influence of assemblage distribution on size) --------
+##***********************************************************************************************
 
 #Load Data::Influence of assemblage distribution on size (data only shown for the 13 most abundant species in the Equatorial Indian Ocean)
 
@@ -1064,42 +1045,55 @@ stacked_area_plot_ordered_13_species_data <- read.csv("stacked_area_plot_ordered
 #Re-order the data according to core location (i.e. Arabian Sea, Bay of Bengal, Central Indian Ocean, and Mozambique Channel)
 
 stacked_area_plot_ordered_13_species_data_two$Coreids <- factor(stacked_area_plot_ordered_13_species_data_two$Coreid, 
-                                                            levels = c("BARP9441",  "BARP9439",  "BARP9437", "MD12-3423",  "BARP9412", "BARP9411",
-                                                                       "MD77-160 ","BARP9409", "BARP9430", "BARP9422", "BARP9426", "MD77-171 ",
+                                                            levels = c("BARP9441",  "BARP9439",  "BARP9437", "MD12-3423", "BARP9412", "BARP9411",
+                                                                       "MD77-160 ", "BARP9409", "BARP9430", "BARP9422", "BARP9426", "MD77-171 ",
                                                                        "MD77-185", "MD76-133",  "MD77-182 ", "MD90-0949",  "MD90-0955", "MD90-0963", 
-                                                                       "MD90-0959", "MD90-0958","MD90-0961", "MD90-0960", "MD90-0956", "MD90-0957",
-                                                                       "MD76-132", "MD77-205", "MD77-204","MD77-202", "MD04-2873", "MD04-2877", "MD04-2875B")) 
+                                                                       "MD90-0959", "MD90-0958", "MD90-0961", "MD90-0960", "MD90-0956", "MD90-0957",
+                                                                       "MD76-132", "MD77-205", "MD77-204", "MD77-202", "MD04-2873", "MD04-2877", "MD04-2875B")) 
 
 #Set color pallette
 
-Paired <- colorRampPalette(brewer.pal('Paired',n=12), alpha = FALSE)
+Paired <- colorRampPalette(brewer.pal('Paired',n=12), alpha = FALSE) # set color palette to be mapped to species
 
 #Plot Figure
 
-stacked_area_plot_ordered_13_species_plot_two <- ggplot(stacked_area_plot_ordered_13_species_data_two, 
-                                                    aes(x= size, fill=Species)) +
-  geom_area(aes(y = stat(width*density*25)),  stat = "bin") + 
-  scale_fill_manual(values = setNames(Paired(13), levels(stacked_area_plot_ordered_13_species_data_two$Species))) + 
-  facet_wrap(~Coreids, nrow = 7, ncol = 5) + 
-  scale_x_continuous (limits=c(150,1300), breaks = seq(150, 1300, by = 250)) + 
-  geom_vline(aes(xintercept = size95), col="black") +
-  geom_vline(aes(xintercept = Norm_Mode), col="black", linetype = "longdash") +
-  theme(legend.position = 'right') + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 12)) +
-  theme(axis.text.x = element_text(angle=90,hjust=1, size=15)) + 
-  theme(axis.text.y = element_text(size=15)) + 
-  theme(axis.title = element_text(size=18)) + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ 
-  theme(legend.text = element_text(face = c(rep("italic", 5)))) + 
-  theme(legend.title = element_text(face = c(rep("bold", 5)), size = 18)) + 
-  theme(legend.text = element_text(size = 15)) + 
-  xlab("Size (μm)") +
-  ylab("Density")
+stacked_area_plot_ordered_13_species_plot_two <- ggplot(stacked_area_plot_ordered_13_species_data_two, # specify new data object
+                                                    aes(x = size, fill = Species)) + # specify columns for x-axis and set color by species
+  geom_area(aes(y = stat(width*density*25)), # set statistical transformation to be applied to data
+            stat = "bin") + # make the height of each bar equal to the number of cases in each group
+  scale_fill_manual(values = setNames(Paired(13), # set color scheme and the number of species whose labels are to be mapped to a color in the color scheme (note: this is done in alphabetical order)
+                                      levels(stacked_area_plot_ordered_13_species_data_two$Species))) + # set column for labels
+  facet_wrap(~Coreids, # wrap panels by Core ID
+             nrow = 7, ncol = 5) + # set panel arrangement for the figures
+  scale_x_continuous (limits=c(150, 1300), # set lower and upper limits for x-axis value range
+                      breaks = seq(150, 1300, by = 250)) + # set the value by which ticks will be incremental and labeled between 150 and 1300
+  geom_vline(aes(xintercept = size95), # specify column that will be used to draw vertical line for the Size95 per assemblage
+             col="black") + # set vertical line color (note that no "line type" is set here, hence, a continuous line is drawn)
+  geom_vline(aes(xintercept = Norm_Mode), # specify column that will be used to draw vertical line for the modal size per assemblage
+             col="black", # set vertical line color
+             linetype = "longdash") + # set "long dash" as vertical line type 
+  theme(legend.position = 'right') + # show legend on the right
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 12)) + # set panel title text size
+  theme(axis.text.x = element_text(angle = 90, # set x-axis text angle
+                                   hjust = 1, # set horizontal justification (i.e., distance between axis text and panel)
+                                   size = 15)) + # set x-axis text size
+  theme(axis.text.y = element_text(size = 15)) + # set y-axis text size
+  theme(axis.title = element_text(size = 18)) + # set axis title text size
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(legend.text = element_text(face = c(rep("italic", 5)))) + # set legend text format
+  theme(legend.title = element_text(face = c(rep("bold", 5)), size = 18)) + # set legend title text format and size
+  theme(legend.text = element_text(size = 15)) + # set legend text size
+  xlab("Size (μm)") + # add x-axis title
+  ylab("Density") # add x-axis title
 
 #Export Figure as JPEG
 
-jpeg("~/Desktop/stacked_area_plot_ordered_exp_two_04012023.jpg",width=8500,height=7181,units="px",res=600,bg="white", pointsize = 8)
-stacked_area_plot_ordered_13_species_plot_two
+jpeg("~/Desktop/Figure S5b in Supporting Information 1.jpg", width = 8500, height = 7181,units = "px",res = 600, bg = "white", pointsize = 8)
+stacked_area_plot_ordered_13_species_plot_two # save figure object in jpeg format
 dev.off()
 
+##**********************************************************************************************************************************##
+## End of Script --------
+##**********************************************************************************************************************************##
