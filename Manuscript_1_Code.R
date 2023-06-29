@@ -40,9 +40,9 @@ library("robustbase")
 
 jarque.bera.test(All_species_unimod_test$size) #Test whether size data follows a normal distribution using the Jarque-Bera test method
 
-#****************************************
-# Figure 3b (Human vs Machine) ----------
-#****************************************
+##****************************************
+## Figure 3b (Human vs Machine) ----------
+##****************************************
 
 ## Load Data:: Human vs Machine Count (Total Individual and Mean Species Count)
 
@@ -247,9 +247,9 @@ this_study_size_vs_rillo_plots_final_exp # save the new figure object in jpeg fo
 dev.off()
 
 
-##****************************************************************
-#Figure 5 (Factor Analysis for Assemblage distribution) ----------
-##****************************************************************
+##******************************************************************
+## Figure 5 (Factor Analysis for Assemblage distribution) ----------
+##******************************************************************
 
 ## Load Data:: Assemblage Distribution Factor Analysis (Groundtruthing Cayre et al. 1997)
 
@@ -573,11 +573,11 @@ bonfer_test$bonferroni_sig_2 <- p.adjust(bonfer_test$pvalue, # load the initial 
 ## Figure 9 (Species-specific Response) ----------
 ##************************************************
 
-#Load Data:: Species specific response to environmental parameters
+## Load Data:: Species specific response to environmental parameters
 
 species_specific_response <- read.csv("species_specific_response_data.csv", header = TRUE, sep = ',')
 
-#Plot Figure
+## Plot Figure
 
 species_specific_response_plot <- ggplot(species_specific_response_primary_copy_2, # specify data object
                                          aes(y = r2rlm_1, axis1 = Parameter, axis2 = Species)) + # specify the column that determine the width of the curves, and the columns for the axes on the left and right
@@ -610,7 +610,7 @@ species_specific_response_plot <- ggplot(species_specific_response_primary_copy_
   guides(fill = guide_legend(title = "Parameters")) + # add legend title
   ggtitle("Species-specific Response to Environmental Variables") # add plot title
 
-#Export Figure as JPEG
+## Export Figure as JPEG
 
 jpeg("~/Desktop/Figure 9.jpg", width = 9500, height = 7500,units = "px",res = 700,bg = "white", pointsize = 8)
 species_specific_response_plot # save the figure object in jpeg format
@@ -678,39 +678,43 @@ jpeg("~/Desktop/Figure 10.jpg", width = 10000, height = 3700, units = "px", res 
 ggarrange(ggarrange(Size_vs_species_diversity,Size_vs_species_richness)) # save and arrange the figure object in jpeg format
 dev.off() 
 
-#******************************************************************
-#Figure 11 (Contribution of Large vs Small Size Species) ---------
-#******************************************************************
+##*******************************************************************
+## Figure 11 (Contribution of Large vs Small Size Species) ----------
+##*******************************************************************
 
-#Load Data:: Contribution of Large vs Small Size Species relative to the Regional Size 95
+## Load Data:: Contribution of Large vs Small Size Species relative to the Regional Size 95
 
 Proxy_for_large_vs_small_size_data <- read.csv("Proxy_for_large_vs_small_size.csv", header = TRUE, sep = ',') 
 
-#Plot Figure
+## Plot Figure
 
-Perc_greater_than_reg_size95 <- ggplot(Proxy_for_large_vs_small_size, 
-                                       aes(x=abundance, y=size, 
-                                           size = Percentage_greater_than_regional_size95)) +
-  geom_point(alpha = 0.93, stat = "identity" ,aes(color = Region)) + 
-  scale_shape_manual(values = c(15,16,17,18)) + 
-  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + 
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  theme(axis.text=element_text(size = 22, colour = "black"),
-        axis.title=element_text(size=24, colour = "black", face = "bold")) +
-  theme(legend.text = element_text(size = 22), legend.position = "right") + 
-  theme(legend.title = element_text(size = 24), legend.position = "right") + 
-  guides(color = guide_legend(override.aes = list(size = 8))) +
-  scale_size(range = c(3, 18), name="Percentage (> Regional Size     )") +
-  labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Abundance (Total number of forams)"))
+Perc_greater_than_reg_size95 <- ggplot(Proxy_for_large_vs_small_size, # specify data object
+                                       aes(x = abundance, y = size, # specify columns for x and y axes
+                                           size = Percentage_greater_than_regional_size95)) + # specify column to be used to scale bubble size
+  geom_point(alpha = 0.93, # set transparency
+             stat = "identity" , # set statistical transformation to use on the data for this layer
+             aes(color = Region)) + # set column to be used to group by color 
+  scale_shape_manual(values = c(15, 16, 17, 18)) + # set shape manually
+  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5")) + # set color for "region" manually
+  theme_bw() + # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text = element_text(size = 22, colour = "black"), # set axis text size and color
+        axis.title = element_text(size = 24, colour = "black", face = "bold")) + # set axis title size, color, and format
+  theme(legend.text = element_text(size = 22), # set legend text size
+        legend.position = "right") + # set legend position
+  theme(legend.title = element_text(size = 24), # set legend title size
+        legend.position = "right") + # set legend position
+  guides(color = guide_legend(override.aes = list(size = 8))) + # override legend text size for "region" and set preferred text size 
+  scale_size(range = c(3, 18), # scale bubble size in legend  
+             name = "Percentage (> Regional Size     )") + # add legend title for the bubble list in legend (note: space after "Regional Size" is intentional)
+  labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Abundance (Total number of forams)")) # add x and y axis titles
   
-#Export Figure as JPEG
+## Export Figure as JPEG
 
-png("~/Desktop/Perc_greater_than_reg_size95 16122022.png",width=7800,height=4400,units="px",res=600,bg="white", pointsize = 8)
-Perc_greater_than_reg_size95
+png("~/Desktop/Figure 11.png", width = 7800, height = 4400, units = "px", res = 600, bg = "white", pointsize = 8)
+Perc_greater_than_reg_size95 # save the figure object in jpeg format
 dev.off()
-
-
 
 #******************************************************************
 #Figure 13 (Data + Code) -----------------------------------------
