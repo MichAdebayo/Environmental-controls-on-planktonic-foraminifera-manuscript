@@ -55,17 +55,17 @@ Human_vs_Machine <- ggplot(NULL,
                            aes(Total_Machine_Count, Total_Human_Count)) + # specify columns for x and y axes (individual species count)
   geom_point(data = Human_vs_Machine_1, size = 4, # plot the machine count vs the human expert count
              aes(color = Species, shape = Species)) + # add color and shape by species
-  geom_abline(intercept = 0, slope = 1, color = 'black', size = .4) + # add y = x line and specify the color and size of the line (i.e., the line that cuts across the figure)
+  geom_abline(intercept = 0, slope = 1, color = "black", size = .4) + # add y = x line and specify the color and size of the line (i.e., the line that cuts across the figure)
   scale_color_viridis_d(aesthetics = "colour") + # add color scale (this was not used because it was override manually)
   scale_color_manual(aesthetics = "color", # specify the color representing each species manually
-                     values = c("#dd77a3", "#67c675", "#c76dcf","#a7bc45", 
-                                "#6a70d7", "#6aa13f","#523687","#ce9534",
-                                "#6d8bd6","#cd6d3b", "#33d4d1","#c9417e",
-                                "#47bb8a", "#a54190", "#4a6e24","#ca86ce",
-                                "#af9e4d", "#802657","#984627","#dd5858",
-                                "#b44555","#8B4789")) +
-  scale_shape_manual(values = c(4,5,6,7,8,9,10,11,12,13, # specify the shape representing each species manually
-                                14,15,16,17,18,19,20,21,22,23,24,25)) + 
+                     values = c("#dd77a3", "#67c675", "#c76dcf", "#a7bc45", 
+                                "#6a70d7", "#6aa13f", "#523687", "#ce9534",
+                                "#6d8bd6", "#cd6d3b", "#33d4d1", "#c9417e",
+                                "#47bb8a", "#a54190", "#4a6e24", "#ca86ce",
+                                "#af9e4d", "#802657", "#984627", "#dd5858",
+                                "#b44555", "#8B4789")) +
+  scale_shape_manual(values = c(4, 5, 6, 7, 8, 9, 10, 11, 12, 13, # specify the shape representing each species manually
+                                14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25)) + 
   scale_y_log10() + scale_x_log10() + # convert values to logarithmic scale
   geom_point(data = Human_vs_Machine_2, # add a second plot for the human vs machine mean count per species (note that this is the second data object)
              aes(x = Mean_Machine_Count, y = Mean_Human_Count, # specify columns for second x and y axes (mean count per species)
@@ -75,7 +75,7 @@ Human_vs_Machine <- ggplot(NULL,
   theme_bw() + # set background to white
   theme(legend.position = "right") + # place legend to the right of the figure
   theme(axis.line  = element_line(colour = "black",size = 0), # set x and y axis line colors to black
-        panel.border = element_rect(colour = "black", fill=NA, size = 1), # format panel border color to black and make size of the border 1
+        panel.border = element_rect(colour = "black", fill = NA, size = 1), # format panel border color to black and make size of the border 1
         panel.grid.minor = element_blank(), # remove minor grid lines in figure
         panel.grid.major = element_blank()) + # remove major grid lines in figure
   geom_text_repel(data = Human_vs_Machine_2,  # load the second data to specify labels for each species' bubble
@@ -199,12 +199,12 @@ this_study_size_vs_rillo_plot <- ggplot(this_study_size_vs_rillo, # specify data
                  shape = Species), # give each species its own shape
              size = 8) + # format shape size
   scale_color_manual(aesthetics = "colour", # specify the color representing each species manually
-                     values = c("#DC050C","#67c675", "#a7bc45", "#6a70d7", "#6aa13f",
-                                "#ce9534","#6d8bd6","#cd6d3b", "#33d4d1","#c9417e",
-                                "#47bb8a", "#a54190", "#4a6e24","#ca86ce", "#af9e4d", 
-                                "#802657", "#72190E","#dd5858","#42150A", "#b44555")) + 
-  scale_shape_manual(values = c(1,5,7,8,9,11,12,13,14, # specify the shape representing each species manually
-                                15,16,17,18,19,20,21,22,23,3,24)) + 
+                     values = c("#DC050C", "#67c675", "#a7bc45", "#6a70d7", "#6aa13f",
+                                "#ce9534", "#6d8bd6", "#cd6d3b", "#33d4d1", "#c9417e",
+                                "#47bb8a", "#a54190", "#4a6e24", "#ca86ce", "#af9e4d", 
+                                "#802657", "#72190E", "#dd5858", "#42150A", "#b44555")) + 
+  scale_shape_manual(values = c(1, 5, 7, 8, 9, 11, 12, 13, 14, # specify the shape representing each species manually
+                                15, 16, 17, 18, 19, 20, 21, 22, 23, 3, 24)) + 
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) + # add error bars 
   theme_bw() + # set background to white
   theme(legend.position = "right") + # place legend to the right of the figure
@@ -569,9 +569,9 @@ bonfer_test$bonferroni_sig_2 <- p.adjust(bonfer_test$pvalue, # load the initial 
                                          method = "bonferroni") < alpha # Determine whether p-value is significant at alpha level after bonferroni correction
 
 
-#***********************************************
-#Figure 9 (Species-specific Response) ----------
-#***********************************************
+##************************************************
+## Figure 9 (Species-specific Response) ----------
+##************************************************
 
 #Load Data:: Species specific response to environmental parameters
 
@@ -628,47 +628,54 @@ All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
 
 ## (a) Size vs Species Richness
 
-  Size_vs_species_richness <- ggplot(All_core_site_data,
-                                     aes(species_richness,size)) + 
-    geom_point(aes(color = Depth, shape = Region), size = 5) +
-    geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, color = 'black')  + 
-    scale_color_gradientn(colours = c("#d7191c","#fdae61","#abd9e9","#004488")) +
-    scale_shape_manual(values = c(15,16,17,18)) + 
-    theme_bw() + 
-    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-    theme(axis.text=element_text(size = 20, colour = "black"), legend.position = "none",
-          axis.title=element_text(size=22, colour = "black", face = "bold")) +
-    guides(shape = guide_legend(override.aes = list(size = 6))) +
-    annotate("text", x = 18, y = 850, size = 7, colour ="black", label = "italic(R)^{2}==0.013*','~italic(p)==0.546", parse = TRUE) +
-    labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Species Richness"))
-  
-  #450054","#FCE724","#DC267F","#FE6100"
-  #FCE724","#7AD151", "#2A778F","#450054"
-  #expression("Size (μm)")
-  
+Size_vs_species_richness <- ggplot(All_core_site_data, # specify data object
+                                     aes(species_richness,size)) + # specify columns for x and y axes
+    geom_point(aes(color = Depth, shape = Region), size = 5) + # color points by depth and set shape based on region
+    geom_smooth(method="rlm", aes(colour="rlm"), # fit robust linear model
+                se=T,  # show confidence interval
+                size = .5, # set size of regression line
+                color = 'black')  + # set color of regression line
+    scale_color_gradientn(colours = c("#d7191c", "#fdae61", "#abd9e9", "#004488")) + # set color gradient for depth manually
+    scale_shape_manual(values = c(15,16,17,18)) + # set shape for region manually
+    theme_bw() + # set background to white
+    theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+          panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+    theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+          legend.position = "none", # show no legend 
+          axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title size, color, and format
+    guides(shape = guide_legend(override.aes = list(size = 6))) + # override default legend text size for "region" and set preferred text size 
+    annotate("text", x = 18, y = 850, size = 7, colour ="black", # specify position, size, and color of text to be annotated
+             label = "italic(R)^{2}==0.013*','~italic(p)==0.546", parse = TRUE) + # add the text to be annotated
+    labs(y = expression(Size[95]["/"][5]~(µm)), x = expression("Species Richness")) # add x and y axis titles
+
 ## (b) Size vs Species Diversity
 
-  Size_vs_species_diversity <- ggplot(All_core_site_data, #Add data (Data, x-variable, y-variable)
-                                     aes(species_diversity,size)) + 
-    geom_point(aes(color = Depth, shape = Region), size = 5) +    # color points by depth
-    geom_smooth(method="rlm", aes(colour="rlm"),se=T, size = .5, color = 'black')  + 
-    scale_color_gradientn(colours = c("#d7191c","#fdae61","#abd9e9","#004488"), name = "Depth (m)") +
-    scale_shape_manual(values = c(15,16,17,18)) + 
-    theme_bw() + 
-    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-    theme(axis.text=element_text(size = 20, colour = "black"), 
-          axis.title=element_text(size=22, colour = "black", face = "bold")) +
-    theme(legend.position = "right", legend.text = element_text(size = 20),
-          legend.title = element_text(size = 22)) +
-    guides(shape = guide_legend(override.aes = list(size = 6))) +
-    annotate("text", x = 1.65, y = 820, size = 7, 
-             colour ="black", label = "italic(R)^{2}==0.49*','~italic(p)==6.43e-09", parse = TRUE) +
-    labs(y = NULL, x = expression("Species Diversity (Shannon–Weiner Index)"))
+  Size_vs_species_diversity <- ggplot(All_core_site_data, # specify data object
+                                     aes(species_diversity,size)) + # specify columns for x and y axes
+    geom_point(aes(color = Depth, shape = Region), size = 5) + # color points by depth and set shape based on region
+    geom_smooth(method="rlm", aes(colour="rlm"), # fit robust linear model
+                se=T, # show confidence interval
+                size = .5, # set size of regression line
+                color = 'black') + # set color of regression line
+    scale_color_gradientn(colours = c("#d7191c", "#fdae61", "#abd9e9", "#004488"), # set color gradient for depth manually
+                          name = "Depth (m)") + # set legend title 
+    scale_shape_manual(values = c(15,16,17,18)) + # set shape for region manually
+    theme_bw() + # set background to white
+    theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+          panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+    theme(axis.text = element_text(size = 20, colour = "black"), # set axis text size and color
+          axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title size, color, and format
+    theme(legend.position = "right", legend.text = element_text(size = 20), # set legend position and legend text size
+          legend.title = element_text(size = 22)) + # set legend title size
+    guides(shape = guide_legend(override.aes = list(size = 6))) + # override legend text size for "region" and set preferred text size 
+    annotate("text", x = 1.65, y = 820, size = 7, colour ="black", # specify position, size, and color of text to be annotated
+              label = "italic(R)^{2}==0.49*','~italic(p)==6.43e-09", parse = TRUE) + # add the text to be annotated
+    labs(y = NULL, x = expression("Species Diversity (Shannon–Weiner Index)")) # add x-axis title
     
-#Export all Figures as single JPEG file
+## Export Figure as JPG
   
-jpeg("~/Desktop/Size_vs_abundance_richness_and_diversity22122022_expT.jpg",width=10000,height=3700,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(ggarrange(Size_vs_species_diversity,Size_vs_species_richness))
+jpeg("~/Desktop/Figure 10.jpg", width = 10000, height = 3700, units = "px", res = 600, bg = "white", pointsize = 8)
+ggarrange(ggarrange(Size_vs_species_diversity,Size_vs_species_richness)) # save and arrange the figure object in jpeg format
 dev.off() 
 
 #******************************************************************
