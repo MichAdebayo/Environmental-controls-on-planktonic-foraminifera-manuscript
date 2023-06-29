@@ -716,58 +716,71 @@ png("~/Desktop/Figure 11.png", width = 7800, height = 4400, units = "px", res = 
 Perc_greater_than_reg_size95 # save the figure object in jpeg format
 dev.off()
 
-#******************************************************************
-#Figure 13 (Data + Code) -----------------------------------------
-#******************************************************************
+##*****************************************************************
+## Figure 12 (Size Factor 1 & 2 Scores vs CO32- and SST) ----------
+##*****************************************************************
 
-#Load Data(a & b):: Size F1 Scores vs Surface Carbonate concentration and Size F2 Scores vs 2nd Order Polynomial Fit with SST 
+## Load Data(a & b):: Size F1 Scores vs Surface Carbonate concentration and Size F2 Scores vs 2nd Order Polynomial Fit with SST 
 
 All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
 
-F1size_vs_surf_carb <- ggplot(All_core_site_data, aes(x= surf_carb, y=F1size)) + 
-  geom_point(aes(colour = Region, shape = Region), size = 9) +
-  stat_smooth(method = "rlm", formula = y~x,col = "#000000",se = FALSE, size = 0.7, fullrange = T) +
-  scale_shape_manual(values = c(15,16,17,18)) + 
-  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5"), 
-                     guide = guide_legend(override.aes = list(size = 9))) +
-  theme_bw() +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  guides (size = "none") +
-  theme(axis.text=element_text(size = 22, colour = "black"), 
-        axis.title=element_text(size=24, colour = "black", face = "bold")) +
-  theme(legend.text = element_text(size = 24), legend.title = element_text(size = 24)) +
-  annotate("text", x = 255, y = 1.3, size = 7, colour ="black", 
-           label = "italic(R)^{2}==0.41*','~italic(p)==1.18e-07", parse = TRUE) +
-  labs(x = expression(Carbonate~conc.[surface] ~ (µm/kg)), y = expression("F1 Axis Scores"))
+## (a) Size F1 Scores vs surface carbonate concentration
+
+F1size_vs_surf_carb <- ggplot(All_core_site_data, # specify data object
+                              aes(x = surf_carb, y = F1size)) + # specify columns for x and y axes
+  geom_point(aes(colour = Region, shape = Region), # set column to be used to group by color and shape
+             size = 9) + # size point size
+  stat_smooth(method = "rlm", formula = y~x, # fit robust linear model
+              col = "#000000", # set regression line color
+              se = FALSE, # do not show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  scale_shape_manual(values = c(15, 16, 17, 18)) + # set shape manually
+  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5"), # set color manually
+                     guide = guide_legend(override.aes = list(size = 9))) + # override default legend shape size and set new shape size
+  theme_bw() + # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  guides (size = "none") + # do not show any legend for size
+  theme(axis.text=element_text(size = 22, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=24, colour = "black", face = "bold")) + # set axis title size, color, and format
+  theme(legend.text = element_text(size = 24), # set legend text size
+        legend.title = element_text(size = 24)) + # set legend title size
+  annotate("text", x = 255, y = 1.3, size = 7, colour ="black", # specify position, size, and color of text to be annotated
+           label = "italic(R)^{2}==0.41*','~italic(p)==1.18e-07", parse = TRUE) + # add the text to be annotated
+  labs(x = expression(Carbonate~conc.[surface] ~ (µm/kg)), y = expression("F1 Axis Scores")) # add x and y axis titles
 
 
-#(b) Size F2 Scores vs 2nd Order Polynomial Fit with SST
+## (b) Size F2 Scores vs 2nd Order Polynomial Fit with SST
 
-F2size_vs_SST <- ggplot(All_core_site_data, aes(x=sst, y=F2size)) + 
-  geom_point(aes(colour = Region, shape = Region), size = 9) + 
-  stat_smooth(method = "lm", formula = y~poly(x,2),col = "#000000",se = FALSE, size = 0.7, fullrange = T) +
-  scale_shape_manual(values = c(15,16,17,18)) + 
-  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5"),
-                     guide = guide_legend(override.aes = list(size = 9))) +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 22, colour = "black"), 
-        axis.title=element_text(size=24, colour = "black", face = "bold")) +
-  theme(legend.text = element_text(size = 22), legend.title = element_text(size = 24)) + 
-  guides(size = "none") +
-  annotate("text", x = 23, y = 1.6, size = 7, colour = "black", 
-           label = "italic(R)^{2}==0.46*','~italic(p)==1.248e-08", parse = TRUE) +
-labs(x = expression("SST ("*degree*"C)"), y = expression("F2 Axis Scores")) 
+F2size_vs_SST <- ggplot(All_core_site_data, # specify data object
+                        aes(x = sst, y = F2size)) + # specify columns for x and y axes
+  geom_point(aes(colour = Region, shape = Region), # set column to be used to group by color and shape
+             size = 9) + # size point size
+  stat_smooth(method = "lm", formula = y~poly(x,2), # fit 2nd order polynomial model
+              col = "#000000", # set regression line color
+              se = FALSE, # do not show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  scale_shape_manual(values = c(15, 16, 17, 18)) + # set shape manually
+  scale_color_manual(values = c("#b067a3", "#9c954d", "#bc7d39", "#697ed5"), # set color manually
+                     guide = guide_legend(override.aes = list(size = 9))) + # override default legend shape size and set new shape size
+  theme_bw() + # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 22, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=24, colour = "black", face = "bold")) +  # set axis title text size, color, and format
+  theme(legend.text = element_text(size = 22), # set legend text size
+        legend.title = element_text(size = 24)) + # set legend title text size
+  guides(size = "none") + # do not show any legend for size
+  annotate("text", x = 23, y = 1.6, size = 7, colour = "black", # specify position, size, and color of text to be annotated
+           label = "italic(R)^{2}==0.46*','~italic(p)==1.248e-08", parse = TRUE) + # add the text to be annotated
+labs(x = expression("SST ("*degree*"C)"), y = expression("F2 Axis Scores")) # add x and y axis titles
 
-#Export Figures figures as JPG
+## Export Figures as JPG
 
-jpeg("~/Desktop/Community Size Response16122022.jpg",width=15000,height=5000,units="px",res=600,bg="white", pointsize = 8)
-ggarrange(ggarrange(F1size_vs_surf_carb,F2size_vs_SST, ncol = 2))
-dev.off() 
-
-
-png("~/Desktop/Community Size Response22082022_poster.png",width=59,height=36.26,units="cm",res=600,bg="white", pointsize = 8)
-ggarrange(ggarrange(F1size_vs_surf_carb,F2size_vs_SST, ncol = 2))
+jpeg("~/Desktop/Figure 12.jpg", width = 15000, height = 5000, units = "px", res = 600, bg = "white", pointsize = 8)
+ggarrange(ggarrange(F1size_vs_surf_carb,F2size_vs_SST, ncol = 2)) # save and arrange the figure object into 2 columns and in jpeg format
 dev.off() 
 
 #******************************************************************
