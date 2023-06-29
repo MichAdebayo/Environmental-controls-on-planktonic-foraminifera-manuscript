@@ -569,6 +569,53 @@ bonfer_test$bonferroni_sig_2 <- p.adjust(bonfer_test$pvalue, # load the initial 
                                          method = "bonferroni") < alpha # Determine whether p-value is significant at alpha level after bonferroni correction
 
 
+#***********************************************
+#Figure 9 (Species-specific Response) ----------
+#***********************************************
+
+#Load Data:: Species specific response to environmental parameters
+
+species_specific_response <- read.csv("species_specific_response_data.csv", header = TRUE, sep = ',')
+
+#Plot Figure
+
+species_specific_response_plot <- ggplot(species_specific_response_primary_copy_2, # specify data object
+                                         aes(y = r2rlm_1, axis1 = Parameter, axis2 = Species)) + # specify the column that determine the width of the curves, and the columns for the axes on the left and right
+  geom_alluvium(aes(fill = Parameter), # set reference column to start the flow on the left
+                aes.bind = "flow", # set connection type
+                curve_type = "arctangent", # set curve type
+                width = 1/4) + # set the width of each stratum, as a proportion of the distance between axes
+  geom_stratum(width = 1/4, # plots rectangles for each stratum based on specified width
+               fill = "black", # adds background color to the rectangle in each stratum
+               color = "white") + # keeps a white color outline around each rectangle
+  geom_text(stat = "stratum", # set statistical transformation to use on the data for this layer
+            aes(label = after_stat(stratum)), # set aesthetic mapping. This means labels are to be added to each stratum
+            size = 5, # set font size
+            fontface = "italic", # set font format
+            colour = "white", # set font color
+            check_overlap = TRUE) + # checks for text overlaps, if present, text in the same layer will not be plotted
+  scale_x_discrete(limits = c("Parameter", "Species"), # set vectors to be used to define possible values of the scale and their order
+                   expand = c(.1, .1)) + # add some padding around the data to ensure that they are placed some distance away from the axes
+  scale_fill_brewer(type = "qual", palette = "Set1") + # set color palette for the flows 
+  theme_bw() + # set background to white
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text.y = element_blank()) + # remove axis texts on y-axis
+  theme(axis.ticks.y = element_blank()) + # remove axis ticks on y-axis
+  theme(axis.text.x = element_text(size = 22, colour = "black")) + # set x-axis text size and color
+  theme(axis.title=element_blank()) + # remove axis title 
+  theme(plot.title = element_text(size = 23)) + # set text size of plot title
+  theme(legend.text = element_text(size = 22), # set text size of legend texts 
+        legend.title = element_text(size = 23)) + # set text size of legend title 
+  guides(fill = guide_legend(title = "Parameters")) + # add legend title
+  ggtitle("Species-specific Response to Environmental Variables") # add plot title
+
+#Export Figure as JPEG
+
+jpeg("~/Desktop/Figure 9.jpg", width = 9500, height = 7500,units = "px",res = 700,bg = "white", pointsize = 8)
+species_specific_response_plot # save the figure object in jpeg format
+dev.off()
+
 ##*********************************************************************
 ## Figure 10 Size vs Species Richness and Species Diversity) ----------
 ##*********************************************************************
@@ -579,7 +626,7 @@ All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
 
 ## Plot Figures
 
-## (b) Size vs Species Richness
+## (a) Size vs Species Richness
 
   Size_vs_species_richness <- ggplot(All_core_site_data,
                                      aes(species_richness,size)) + 
@@ -599,7 +646,7 @@ All_core_data <- read.csv("All_core_site_data.csv", header = TRUE, sep = ',')
   #FCE724","#7AD151", "#2A778F","#450054"
   #expression("Size (μm)")
   
-#(c) Size vs Species Diversity
+## (b) Size vs Species Diversity
 
   Size_vs_species_diversity <- ggplot(All_core_site_data, #Add data (Data, x-variable, y-variable)
                                      aes(species_diversity,size)) + 
@@ -656,41 +703,7 @@ png("~/Desktop/Perc_greater_than_reg_size95 16122022.png",width=7800,height=4400
 Perc_greater_than_reg_size95
 dev.off()
 
-#******************************************************************
-#Figure 12 (Species-specific Response) ---------------------------
-#******************************************************************
 
-#Load Data (a):: Species specific response to environmental parameters
-
-species_specific_response <- read.csv("species_specific_response_data.csv", header = TRUE, sep = ',')
-
-#Plot Figure
-
-species_specific_response_plot <- ggplot(species_specific_response_primary_copy_2, aes(y = r2rlm_1, axis1 = Parameter, axis2 = Species)) +
-  geom_alluvium(aes(fill = Parameter),  aes.bind = "flow", curve_type = "arctangent", width = 1/4) +
-  geom_stratum(width = 1/4, fill = "black", color = "white") +
-  #geom_label(stat = "stratum", aes(label = after_stat(stratum)), face = "italic") +
-  geom_text(stat = "stratum", aes(label = after_stat(stratum)), 
-            size = 5,fontface = "italic", colour = "white", check_overlap = TRUE) +
-  scale_x_discrete(limits = c("Parameter", "Species"), expand = c(.1, .1)) +
-  scale_fill_brewer(type = "qual", palette = "Set1") +
-  theme_bw() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  theme(axis.text.y = element_blank()) +
-  theme(axis.ticks.y = element_blank()) +
-  theme(axis.text.x = element_text(size = 22, colour = "black")) +
-  theme(axis.title=element_blank()) + 
-  theme(plot.title = element_text(size = 23)) + 
-  theme(legend.text = element_text(size = 22), legend.title = element_text(size = 23)) +
-  labs(y = expression(Correlation ~ Co-efficient~(R^2))) + 
-  guides(fill = guide_legend(title = "Parameters")) + 
-  ggtitle("Species-specific Response to Environmental Variables") 
-
-#Export Figure as JPEG
-
-jpeg("~/Desktop/species_specific_response_exp27092022.jpg",width = 9500,height=7500,units="px",res=700,bg="white", pointsize = 8)
-species_specific_response_plot
-dev.off()
 
 #******************************************************************
 #Figure 13 (Data + Code) -----------------------------------------
