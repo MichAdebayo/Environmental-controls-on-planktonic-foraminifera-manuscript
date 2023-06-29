@@ -535,7 +535,7 @@ Opt_size_hyp_test <- read.csv("Opt_size_hyp_test_data.csv", header = TRUE, sep =
 OSH_Exp <- ggplot(Opt_size_hyp_test, # specify data object
                    aes(x = Sp_rel_abund, y = Size)) + # specify columns for x and y axes
   geom_point() + # Add data points
-  facet_wrap(~Species, # create separate regression analysis on a per species basis (i.e., grouping by species)
+  facet_wrap(~Species, # create separate regression analysis on a per species basis (i.e., wrap panels based by species)
              scales = "free_x", # base the x-axis value range of each plot on the relative abundance data for that species
              shrink = T, # shrink scales to fit output of statistics, not raw data
              as.table = T) + # permit facet layout as a table 
@@ -783,11 +783,11 @@ jpeg("~/Desktop/Figure 12.jpg", width = 15000, height = 5000, units = "px", res 
 ggarrange(ggarrange(F1size_vs_surf_carb,F2size_vs_SST, ncol = 2)) # save and arrange the figure object into 2 columns and in jpeg format
 dev.off() 
 
-#******************************************************************
-#Figure S3 in Supplementary Information 1 (Data + Code) ---------
-#******************************************************************
+##*************************************************
+## Figure S4 in Supporting Information 1 ----------
+##*************************************************
 
-#Load Data:: Rillo et al Size for 9 Species (Equatorial Indian Ocean Samples only) vs SST 
+## Load Data:: Rillo et al Size for 9 Species (tropical Indian Ocean samples only) vs SST 
 
 pobliqrill <- read.csv("pobliqrillo.csv", header = TRUE, sep = ',')
 gmenrill <- read.csv("gmenrillo.csv", header = TRUE, sep = ',')
@@ -799,122 +799,178 @@ gconglobarill <- read.csv("gconglobarillo.csv", header = TRUE, sep = ',')
 gtruncrill <- read.csv("gtruncrillo.csv", header = TRUE, sep = ',')
 ginflacrill <- read.csv("ginflarillo.csv", header = TRUE, sep = ',')
 
-#Plot Figures
+## Plot Figures
 
-Rillo_PO <- ggplot(pobliqrill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = NULL, y = expression("Size (µm)")) 
+Rillo_PO <- ggplot(pobliqrill, # specify data object
+                   aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points 
+  facet_wrap(~species, # wrap panel by species 
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) +  # set axis title text size, color, and format
+  labs(x = NULL, y = expression("Size (µm)")) # add y-axis title
 
-Rillo_GMen <- ggplot(gmenrill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = NULL, y = NULL) 
+Rillo_GMen <- ggplot(gmenrill, # specify data object
+                     aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points 
+  facet_wrap(~species, # wrap panel by species
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"),  # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title text size, color, and format
+  labs(x = NULL, y = NULL) # do not add axis titles
 
-Rillo_NDurt <- ggplot(ndurtrill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = NULL, y = NULL)
+Rillo_NDurt <- ggplot(ndurtrill, # specify data object
+                      aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points 
+  facet_wrap(~species, # wrap panel by species
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() +  # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title text size, color, and format
+  labs(x = NULL, y = NULL) # do not add axis titles
 
-Rillo_GRub <- ggplot(grubrill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = NULL, y = expression("Size (µm)")) 
+Rillo_GRub <- ggplot(grubrill, # specify data object
+                     aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points 
+  facet_wrap(~species, # wrap panel by species
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title text size, color, and format
+  labs(x = NULL, y = expression("Size (µm)")) # add y-axis title
 
-Rillo_GSac <- ggplot(gsacrill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = NULL, y = NULL) 
+Rillo_GSac <- ggplot(gsacrill, # specify data object
+                     aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points 
+  facet_wrap(~species, # wrap panel by species
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title text size, color, and format
+  labs(x = NULL, y = NULL) # do not add axis titles
 
-Rillo_GSiphon <- ggplot(gsiphonrill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = NULL, y = NULL) 
+Rillo_GSiphon <- ggplot(gsiphonrill, # specify data object
+                        aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points 
+  facet_wrap(~species, # wrap panel by species
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title text size, color, and format
+  labs(x = NULL, y = NULL) # do not add axis titles
 
-Rillo_GCongloba  <- ggplot(gconglobarill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = expression("SST (°C)"), y = expression("Size (µm)")) 
+Rillo_GCongloba  <- ggplot(gconglobarill, # specify data object
+                           aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points 
+  facet_wrap(~species, # wrap panel by species
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title text size, color, and format
+  labs(x = expression("SST (°C)"), y = expression("Size (µm)")) # add x and y axis titles
 
-Rillo_GTrunc <- ggplot(gtruncrill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = expression("SST (°C)"), y = NULL) 
+Rillo_GTrunc <- ggplot(gtruncrill, # specify data object
+                       aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points 
+  facet_wrap(~species, # wrap panel by species
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title text size, color, and format
+  labs(x = expression("SST (°C)"), y = NULL) # add x-axis title
 
-Rillo_GInfla <- ggplot(ginflacrill, aes(x=sst, y=size)) + 
-  geom_point() +
-  facet_wrap(~species, scales = "free_x") + 
-  stat_smooth(method = "rlm",col = "#000000",se = T, size = 0.7, fullrange = T) + 
-  theme_bw() + 
-  theme(strip.text.x = element_text(size = 20, face = "italic")) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  theme(axis.text=element_text(size = 20, colour = "black"), 
-        axis.title=element_text(size=22, colour = "black", face = "bold")) +
-  labs(x = expression("SST (°C)"), y = NULL) 
+Rillo_GInfla <- ggplot(ginflacrill, # specify data object
+                       aes(x = sst, y = size)) + # specify columns for x and y axes
+  geom_point() + # add points
+  facet_wrap(~species, # wrap panel by species
+             scales = "free_x") + # make range of values on x-axis to be based on data
+  stat_smooth(method = "rlm", # fit robust linear model
+              col = "#000000", # set regression line color
+              se = T, # show confidence interval
+              size = 0.7, # set regression line size
+              fullrange = T) + # make regression line go from end to end
+  theme_bw() + # set background to white
+  theme(strip.text.x = element_text(size = 20, face = "italic")) + # set panel title text size and format
+  theme(panel.grid.major = element_blank(), # remove major grid lines in figure
+        panel.grid.minor = element_blank()) + # remove minor grid lines in figure
+  theme(axis.text=element_text(size = 20, colour = "black"), # set axis text size and color
+        axis.title=element_text(size=22, colour = "black", face = "bold")) + # set axis title text size, color, and format
+  labs(x = expression("SST (°C)"), y = NULL) # add x-axis title
 
 
-#Arrange figures into columns and rows
+## Arrange figures into columns and rows
 
 Rillo_Analyzed <- ggarrange(Rillo_PO,Rillo_GMen,Rillo_NDurt,Rillo_GRub, Rillo_GSac, Rillo_GSiphon, Rillo_GCongloba,Rillo_GTrunc, Rillo_GInfla, ncol = 3, nrow = 3)
 
-#Export Figure as EPS
+## Export Figure as JPEG
 
-cairo_ps(filename='Rillo Analyzed Plot.eps', width=18, height=16, family = "Arial",
-         pointsize = 8, fallback_resolution = 500)
-Rillo_Analyzed
-dev.off()
-
-#Export Figure as JPEG
-
-jpeg("~/Desktop/Rillo Analyzed Plot18122022.jpg",width=6000,height=5000,units="px",res=500,bg="white", pointsize = 8)
+jpeg("~/Desktop/Figure S4 in Supporting Information 1.jpg",width=6000,height=5000,units="px",res=500,bg="white", pointsize = 8)
 Rillo_Analyzed
 dev.off()
 
